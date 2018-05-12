@@ -20,7 +20,7 @@
       this.el.width = window.innerWidth
       this.el.height = window.innerHeight
     }
-    draw(ms, time, ship, cam) {
+    draw(ms, time, ship, cam, bullets) {
       this.frame++
       const opacity = Math.min(1, ms / 60)
       this.ctx.save()
@@ -29,7 +29,7 @@
       this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
       this.drawCam(this.ctx, ship, cam)
       this.drawShip(this.ctx, time, ship)
-      this.drawBullets(this.ctx, ship)
+      this.drawBullets(this.ctx, bullets)
       this.ctx.restore()
     }
     drawCam(ctx, ship, cam) {
@@ -70,13 +70,13 @@
       }
       ctx.restore()
     }
-    drawBullets(ctx, ship) {
+    drawBullets(ctx, bullets) {
       ctx.save()
       ctx.beginPath()
       ctx.fillStyle = '#ffffff'
       ctx.strokeStyle = '#ffff00'
       ctx.lineWidth = 5
-      ship.bullets.forEach(b => {
+      bullets.forEach(b => {
         ctx.moveTo(b.x, b.y)
         ctx.arc(b.x, b.y, b.size, b.angle - Math.PI * 0.7, b.angle + Math.PI * 0.7)
         ctx.lineTo(b.x, b.y)
@@ -95,8 +95,9 @@
 
     function frame() {
       if (stopped) return
-      let prev = time
       let now = performance.now()
+      if (time < now - 200) time = now - 200
+      let prev = time
       for (let t = time; t <= now; t += tick) {
         time = t
         update(tick, time)
@@ -122,18 +123,16 @@
       this.drag = 0.002
       this.speed = 0.1
       this.agility = 0.005
-      this.bullets = new Set()
       this.bulletInterval = 100
       this.bulletNext = 0
       this.spread = 0.25
       this.kick = 0.5
     }
-    update(ms, time, actions) {
+    update(ms, time, actions, bullets) {
       this.integrate(ms)
       this.turn(ms, actions.left, actions.right)
       this.thrust(ms, actions.forward)
-      this.shoot(ms, time, actions.shoot)
-      this.bullets.forEach(b => b.update(ms, time))
+      this.shoot(ms, time, actions.shoot, bullets)
     }
     integrate(ms) {
       const vx = (this.x - this.x1)
@@ -157,13 +156,13 @@
       this.x += ax
       this.y += ay
     }
-    shoot(ms, time, shooting) {
+    shoot(ms, time, shooting, bullets) {
       if (!shooting) return
       if (this.bulletNext > time) return
       const bx = this.x + this.size * Math.cos(this.angle) * 2
       const by = this.y + this.size * Math.sin(this.angle) * 2
       const ba = this.angle + (Math.random() - 0.5) * this.spread
-      this.bullets.add(new Bullet(bx, by, ba))
+      bullets.add(new Bullet(bx, by, ba, time))
       this.bulletNext = time + this.bulletInterval
       this.x += this.kick * -Math.cos(this.angle)
       this.y += this.kick * -Math.sin(this.angle)
@@ -171,18 +170,20 @@
   }
 
   class Bullet {
-    constructor(x, y, angle) {
+    constructor(x, y, angle, time) {
       this.x = x
       this.y = y
       this.angle = angle
+      this.death = time + 2000
       this.vel = 6
       this.size = 12
     }
-    update(ms) {
+    update(ms, time) {
       const vx = this.vel * Math.cos(this.angle)
       const vy = this.vel * Math.sin(this.angle)
       this.x += vx
       this.y += vy
+      return time < this.death
     }
   }
 
@@ -227,6 +228,7 @@
     const cam = new Camera(ship)
     const screen = new Screen('screen')
     const kb = new Keyboard()
+    const bullets = new Set()
     const stop = Tick(16, update, render)
 
     function update(ms, time) {
@@ -234,12 +236,15 @@
         stop()
         return
       }
-      ship.update(ms, time, kb.actions())
+      ship.update(ms, time, kb.actions(), bullets)
+      bullets.forEach(b => {
+        if (!b.update(ms, time)) bullets.delete(b)
+      })
       cam.update(ms)
     }
 
     function render(ms, time) {
-      screen.draw(ms, time, ship, cam)
+      screen.draw(ms, time, ship, cam, bullets)
     }
   }
 
