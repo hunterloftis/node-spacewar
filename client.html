@@ -110,6 +110,7 @@
       this.bulletInterval = 100
       this.bulletNext = 0
       this.spread = 0.2
+      this.kick = 0.5
     }
     update(ms, time, actions) {
       this.integrate(ms)
@@ -147,6 +148,8 @@
       const ba = this.angle + (Math.random() - 0.5) * this.spread
       this.bullets.add(new Bullet(bx, by, ba))
       this.bulletNext = time + this.bulletInterval
+      this.x += this.kick * -Math.cos(this.angle)
+      this.y += this.kick * -Math.sin(this.angle)
     }
   }
 
