@@ -43,8 +43,8 @@
         ctx.fillStyle = s.c
         const ratio = (1 - s.z / 100)
         const size = 1 + 3 * ratio
-        let x = s.x - cam.x
-        let y = s.y - cam.y
+        let x = s.x - cam.x * ratio
+        let y = s.y - cam.y * ratio
         while (x < 0) x += this.width
         while (x > this.width) x -= this.width
         while (y < 0) y += this.height
@@ -176,7 +176,7 @@
       this.thrusting = false
       this.size = 12
       this.drag = 0.002
-      this.speed = 0.1
+      this.speed = 0.05
       this.agility = 0.003
       this.bulletInterval = 100
       this.bulletNext = 0
@@ -258,9 +258,9 @@
 
   class Camera {
     constructor(ship) {
-      this.lead = ship.size * 10
+      this.lead = ship.size * 15
       this.ship = ship
-      this.delay = 500
+      this.delay = 1000
       this.x = this.ship.x
       this.y = this.ship.y
     }
@@ -288,7 +288,7 @@
         this.points.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          z: 1 + Math.random() * 99,
+          z: Math.max(1, Math.random() * 125 - 25),
           c: color
         })
       }
@@ -331,7 +331,7 @@
     const cam = new Camera(ship)
     const bullets = new Set()
     const screen = new Screen('screen')
-    const stars = new Stars(screen.width, screen.height, 250)
+    const stars = new Stars(screen.width, screen.height, 100) // TODO: n as density over rect area
     const kb = new Keyboard()
     const audio = new Audio()
     const stop = Tick(16, update, render)
