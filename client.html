@@ -2,6 +2,10 @@
 <canvas id='screen' width='640' height='480' />
 <script>
 
+  // https://css-tricks.com/introduction-web-audio-api/
+  // https://noisehack.com/generate-noise-web-audio-api/#demo
+  // https://codepen.io/gregh/post/recreating-legendary-8-bit-games-music-with-web-audio-api
+
   class Screen {
     constructor(id) {
       this.el = document.getElementById(id)
@@ -62,7 +66,7 @@
         ctx.arc(-ship.size, -len * 0.5, len * 0.75, 0, Math.PI * 2)
         ctx.fill()
       }
-      if (ship.bulletNext - time > ship.bulletInterval * 0.7) {
+      if (ship.events.includes('shoot')) {
         ctx.beginPath()
         ctx.fillStyle = '#ffffff'
         ctx.arc(ship.size * 1.75, 0, ship.size * 1.5, 0, Math.PI * 2)
@@ -84,6 +88,40 @@
       ctx.fill()
       ctx.stroke()
       ctx.restore()
+    }
+  }
+
+  class Audio {
+    constructor() {
+      this.context = new (window.AudioContext || window.webkitAudioContext)()
+      this.engines = this.context.createOscillator()
+      this.engines.type = 'sine'
+      this.engines.frequency.value = 131
+      this.engines.start()
+      const resume = () => {
+        document.removeEventListener('keydown', resume)
+        document.removeEventListener('click', resume)
+        this.context.resume()
+      }
+      document.addEventListener('keydown', resume)
+      document.addEventListener('click', resume)
+    }
+    play(ms, time, ship) {
+      if (ship.events.includes('shoot')) this.shoot()
+      if (ship.thrusting) this.engines.connect(this.context.destination)
+      else this.engines.disconnect()
+    }
+    shoot() {
+      const now = this.context.currentTime
+      const sound = this.context.createOscillator()
+      sound.type = 'triangle'
+      sound.frequency.value = 110
+      sound.connect(this.context.destination)
+      sound.start(now)
+      sound.stop(now + 0.1)
+    }
+    thrust() {
+
     }
   }
 
@@ -127,6 +165,7 @@
       this.bulletNext = 0
       this.spread = 0.25
       this.kick = 0.5
+      this.events = new Set()
     }
     update(ms, time, actions, bullets) {
       this.integrate(ms)
@@ -166,6 +205,19 @@
       this.bulletNext = time + this.bulletInterval
       this.x += this.kick * -Math.cos(this.angle)
       this.y += this.kick * -Math.sin(this.angle)
+      this.events.add('shoot')
+    }
+    frame() {
+      const f = {
+        events: Array.from(this.events),
+        x: this.x,
+        y: this.y,
+        size: this.size,
+        angle: this.angle,
+        thrusting: this.thrusting,
+      }
+      this.events.clear()
+      return f
     }
   }
 
@@ -226,9 +278,10 @@
   function main() {
     const ship = new Ship(0, 0)
     const cam = new Camera(ship)
+    const bullets = new Set()
     const screen = new Screen('screen')
     const kb = new Keyboard()
-    const bullets = new Set()
+    const audio = new Audio()
     const stop = Tick(16, update, render)
 
     function update(ms, time) {
@@ -244,7 +297,9 @@
     }
 
     function render(ms, time) {
-      screen.draw(ms, time, ship, cam, bullets)
+      const sh = ship.frame()
+      screen.draw(ms, time, sh, cam, bullets)
+      audio.play(ms, time, sh)
     }
   }
 
