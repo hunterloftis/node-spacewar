@@ -28,7 +28,6 @@ class Screen {
     this.drawShip(this.ctx, time, ship)
     this.drawAsteroids(this.ctx, asteroids)
     this.drawBullets(this.ctx, bullets)
-    this.drawBounds(this.ctx, bounds)
     this.ctx.restore()
   }
   drawStars(ctx, stars, cam) {
@@ -111,16 +110,6 @@ class Screen {
       ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2)
     })
     ctx.fill()
-    ctx.stroke()
-    ctx.restore()
-  }
-  drawBounds(ctx, bounds) {
-    ctx.save()
-    ctx.beginPath()
-    ctx.strokeStyle = '#0099ff'
-    ctx.lineWidth = 15
-    ctx.moveTo(bounds.r, 0)
-    ctx.arc(0, 0, bounds.r, 0, Math.PI * 2)
     ctx.stroke()
     ctx.restore()
   }

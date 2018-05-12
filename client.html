@@ -9,7 +9,6 @@
 <script src='audio.js'></script>
 <script src='tick.js'></script>
 <script src='asteroid.js'></script>
-<script src='boundary.js'></script>
 <script>
 
   main()
@@ -20,31 +19,31 @@
     const kb = new Keyboard()
     const audio = new Audio()
 
-    const bounds = new Boundary(2000)
+    const limit = 1000
     const ship = new Ship(0, 0)
     const cam = new Camera(ship.x, ship.y)
     const bullets = new Set()
     const asteroids = new Set()
     const stop = Tick(16, update, render)
 
-    for (let i = 0; i < 25; i++) asteroids.add(new Asteroid(bounds.r))
+    for (let i = 0; i < 25; i++) asteroids.add(new Asteroid(1000))
 
     function update(ms, time) {
       if (false) {
         stop()
         return
       }
-      ship.update(ms, time, kb.actions(), bullets, bounds.correct.bind(bounds))
+      ship.update(ms, time, kb.actions(), bullets, limit)
       asteroids.forEach(a => a.update(ms))
       bullets.forEach(b => {
         if (!b.update(ms, time)) bullets.delete(b)
       })
-      cam.update(ms, ship)
+      cam.update(ms, ship, limit, screen.width, screen.height)
     }
 
     function render(ms, time) {
       const sh = ship.frame()
-      screen.draw(ms, time, sh, cam, bullets, stars.frame(), asteroids, bounds)
+      screen.draw(ms, time, sh, cam, bullets, stars.frame(), asteroids)
       audio.play(ms, time, sh)
     }
   }

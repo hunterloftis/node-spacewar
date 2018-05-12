@@ -17,14 +17,12 @@ class Ship {
     this.kick = 0.25
     this.events = new Set()
   }
-  update(ms, time, actions, bullets, correct) {
+  update(ms, time, actions, bullets, limit) {
     this.integrate(ms)
     this.turn(ms, actions.left, actions.right)
     this.thrust(ms, actions.forward)
     this.shoot(ms, time, actions.shoot, bullets)
-    const corrected = correct(this.x, this.y, this.size)
-    this.x = corrected.x
-    this.y = corrected.y
+    this.contain(limit)
   }
   integrate(ms) {
     const vx = (this.x - this.x1)
@@ -61,6 +59,13 @@ class Ship {
     this.x += this.kick * -Math.cos(this.angle)
     this.y += this.kick * -Math.sin(this.angle)
     this.events.add('shoot')
+  }
+  contain(limit) {
+    const l = limit - this.size
+    if (this.x < -l) this.x = -l
+    else if (this.x > l) this.x = l
+    if (this.y < -l) this.y = -l
+    else if (this.y > l) this.y = l
   }
   frame() {
     const f = {
