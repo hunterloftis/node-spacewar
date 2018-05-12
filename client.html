@@ -19,21 +19,21 @@
       this.el.width = window.innerWidth
       this.el.height = window.innerHeight
     }
-    draw(ms, ship, cam) {
+    draw(ms, time, ship, cam) {
       const opacity = Math.min(1, ms / 60)
       this.ctx.save()
       this.ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`
       this.ctx.fillRect(0, 0, this.el.width, this.el.height)
       this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
       this.drawCam(this.ctx, ship, cam)
-      this.drawShip(this.ctx, ship)
+      this.drawShip(this.ctx, time, ship)
       this.drawBullets(this.ctx, ship)
       this.ctx.restore()
     }
     drawCam(ctx, ship, cam) {
 
     }
-    drawShip(ctx, ship) {
+    drawShip(ctx, time, ship) {
       const len = Math.sqrt(ship.size * ship.size * 0.5)
       ctx.save()
       ctx.translate(ship.x, ship.y)
@@ -53,6 +53,12 @@
       ctx.closePath()
       ctx.fill()
       ctx.stroke()
+      if (ship.bulletNext - time > ship.bulletInterval * 0.7) {
+        ctx.beginPath()
+        ctx.fillStyle = '#ffffff'
+        ctx.arc(ship.size * 1.75, 0, ship.size * 1.75, 0, Math.PI * 2)
+        ctx.fill()
+      }
       ctx.restore()
     }
     drawBullets(ctx, ship) {
@@ -109,7 +115,7 @@
       this.bullets = new Set()
       this.bulletInterval = 100
       this.bulletNext = 0
-      this.spread = 0.2
+      this.spread = 0.25
       this.kick = 0.5
     }
     update(ms, time, actions) {
@@ -222,7 +228,7 @@
     }
 
     function render(ms, time) {
-      screen.draw(ms, ship, cam)
+      screen.draw(ms, time, ship, cam)
     }
   }
 
