@@ -14,14 +14,17 @@ class Ship {
     this.bulletInterval = 100
     this.bulletNext = 0
     this.spread = 0.25
-    this.kick = 0.5
+    this.kick = 0.25
     this.events = new Set()
   }
-  update(ms, time, actions, bullets) {
+  update(ms, time, actions, bullets, correct) {
     this.integrate(ms)
     this.turn(ms, actions.left, actions.right)
     this.thrust(ms, actions.forward)
     this.shoot(ms, time, actions.shoot, bullets)
+    const corrected = correct(this.x, this.y, this.size)
+    this.x = corrected.x
+    this.y = corrected.y
   }
   integrate(ms) {
     const vx = (this.x - this.x1)

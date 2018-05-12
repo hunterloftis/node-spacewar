@@ -16,7 +16,7 @@ class Screen {
     this.width = this.el.width = window.innerWidth
     this.height = this.el.height = window.innerHeight
   }
-  draw(ms, time, ship, cam, bullets, stars) {
+  draw(ms, time, ship, cam, bullets, stars, asteroids, bounds) {
     this.frame++
     const opacity = Math.min(1, ms / 60)
     this.ctx.save()
@@ -26,7 +26,9 @@ class Screen {
     this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
     this.drawCam(this.ctx, cam)
     this.drawShip(this.ctx, time, ship)
+    this.drawAsteroids(this.ctx, asteroids)
     this.drawBullets(this.ctx, bullets)
+    this.drawBounds(this.ctx, bounds)
     this.ctx.restore()
   }
   drawStars(ctx, stars, cam) {
@@ -95,6 +97,30 @@ class Screen {
       ctx.lineTo(b.x, b.y)
     })
     ctx.fill()
+    ctx.stroke()
+    ctx.restore()
+  }
+  drawAsteroids(ctx, asteroids) {
+    ctx.save()
+    ctx.beginPath()
+    ctx.fillStyle = '#330000'
+    ctx.strokeStyle = '#ff7700'
+    ctx.lineWidth = 5
+    asteroids.forEach(a => {
+      ctx.moveTo(a.x + a.size, a.y)
+      ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2)
+    })
+    ctx.fill()
+    ctx.stroke()
+    ctx.restore()
+  }
+  drawBounds(ctx, bounds) {
+    ctx.save()
+    ctx.beginPath()
+    ctx.strokeStyle = '#0099ff'
+    ctx.lineWidth = 15
+    ctx.moveTo(bounds.r, 0)
+    ctx.arc(0, 0, bounds.r, 0, Math.PI * 2)
     ctx.stroke()
     ctx.restore()
   }
