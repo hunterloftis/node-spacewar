@@ -1,0 +1,234 @@
+<html>
+<canvas id='screen' width='640' height='480' />
+<script>
+
+  class Screen {
+    constructor(id) {
+      this.el = document.getElementById(id)
+      this.ctx = this.el.getContext('2d')
+      Object.assign(this.el.style, {
+        backgroundColor: '#000000',
+        position: 'absolute',
+        left: '0',
+        top: '0',
+      })
+      this.size()
+      window.addEventListener('resize', throttle(() => this.size(), 250))
+    }
+    size() {
+      this.el.width = window.innerWidth
+      this.el.height = window.innerHeight
+    }
+    draw(ms, ship, cam) {
+      const opacity = Math.min(1, ms / 60)
+      this.ctx.save()
+      this.ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`
+      this.ctx.fillRect(0, 0, this.el.width, this.el.height)
+      this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
+      this.drawCam(this.ctx, ship, cam)
+      this.drawShip(this.ctx, ship)
+      this.drawBullets(this.ctx, ship)
+      this.ctx.restore()
+    }
+    drawCam(ctx, ship, cam) {
+
+    }
+    drawShip(ctx, ship) {
+      const len = Math.sqrt(ship.size * ship.size * 0.5)
+      ctx.save()
+      ctx.translate(ship.x, ship.y)
+      ctx.rotate(ship.angle)
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.strokeStyle = '#00ffff'
+      ctx.lineWidth = 3
+      ctx.moveTo(ship.size, 0)
+      ctx.lineTo(-len, ship.size)
+      ctx.lineTo(-len * 1.2, ship.size)
+      ctx.lineTo(-len * 0.5, len * 0.5)
+      ctx.lineTo(-len, 0)
+      ctx.lineTo(-len * 0.5, -len * 0.5)
+      ctx.lineTo(-len * 1.2, -ship.size)
+      ctx.lineTo(-len, -ship.size)
+      ctx.closePath()
+      ctx.fill()
+      ctx.stroke()
+      ctx.restore()
+    }
+    drawBullets(ctx, ship) {
+      ctx.save()
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.strokeStyle = '#ffff00'
+      ctx.lineWidth = 5
+      ship.bullets.forEach(b => {
+        ctx.moveTo(b.x, b.y)
+        ctx.arc(b.x, b.y, b.size, b.angle - Math.PI * 0.7, b.angle + Math.PI * 0.7)
+        ctx.lineTo(b.x, b.y)
+      })
+      ctx.fill()
+      ctx.stroke()
+      ctx.restore()
+    }
+  }
+
+  function Tick(tick, update, render) {
+    let stopped = false
+    let time = performance.now()
+    requestAnimationFrame(frame)
+    return stop
+
+    function frame() {
+      if (stopped) return
+      let prev = time
+      let now = performance.now()
+      for (let t = time; t <= now; t += tick) {
+        time = t
+        update(tick, time)
+      }
+      render(now - prev, now)
+      requestAnimationFrame(frame)
+    }
+
+    function stop() {
+      stopped = true
+    }
+  }
+
+  class Ship {
+    constructor(x, y) {
+      this.x = x
+      this.y = y
+      this.x1 = x
+      this.y1 = y
+      this.angle = -Math.PI * 0.5
+      this.size = 12
+      this.drag = 0.002
+      this.speed = 0.1
+      this.agility = 0.005
+      this.bullets = new Set()
+      this.bulletInterval = 100
+      this.bulletNext = 0
+    }
+    update(ms, time, actions) {
+      this.integrate(ms)
+      this.turn(ms, actions.left, actions.right)
+      this.thrust(ms, actions.forward)
+      this.shoot(ms, time, actions.shoot)
+      this.bullets.forEach(b => b.update(ms, time))
+    }
+    integrate(ms) {
+      const vx = (this.x - this.x1)
+      const vy = (this.y - this.y1)
+      const speed = Math.sqrt(vx * vx + vy * vy)
+      const drag = Math.min(1, speed * speed * this.drag)
+      this.x1 = this.x
+      this.y1 = this.y
+      this.x += vx * (1 - drag)
+      this.y += vy * (1 - drag)
+    }
+    turn(ms, left, right) {
+      if (left) this.angle -= ms * this.agility
+      if (right) this.angle += ms * this.agility
+    }
+    thrust(ms, forward) {
+      if (!forward) return
+      const ax = this.speed * Math.cos(this.angle)
+      const ay = this.speed * Math.sin(this.angle)
+      this.x += ax
+      this.y += ay
+    }
+    shoot(ms, time, shooting) {
+      if (!shooting) return
+      if (this.bulletNext > time) return
+      const bx = this.x + this.size * Math.cos(this.angle) * 2
+      const by = this.y + this.size * Math.sin(this.angle) * 2
+      this.bullets.add(new Bullet(bx, by, this.angle))
+      this.bulletNext = time + this.bulletInterval
+    }
+  }
+
+  class Bullet {
+    constructor(x, y, angle) {
+      this.x = x
+      this.y = y
+      this.angle = angle
+      this.vel = 6
+      this.size = 12
+    }
+    update(ms) {
+      const vx = this.vel * Math.cos(this.angle)
+      const vy = this.vel * Math.sin(this.angle)
+      this.x += vx
+      this.y += vy
+    }
+  }
+
+  class Camera {
+    constructor(ship) {
+      this.ship = ship
+      this.x = this.ship.x
+      this.y = this.ship.y
+    }
+    update(ms) {
+
+    }
+  }
+
+  class Keyboard {
+    constructor() {
+      this.keys = {
+        'ArrowLeft': 'left',
+        'ArrowRight': 'right',
+        'ArrowUp': 'forward',
+        ' ': 'shoot'
+      }
+      this.state = { left: false, right: false, forward: false, shoot: false }
+      document.addEventListener('keydown', e => { this.setKey(e, true) })
+      document.addEventListener('keyup', e => { this.setKey(e, false) })
+    }
+    setKey(e, state) {
+      const action = this.keys[e.key]
+      if (!action) return
+      this.state[action] = state
+      e.preventDefault()
+    }
+    actions() {
+      return this.state
+    }
+  }
+
+  main()
+
+  function main() {
+    const ship = new Ship(0, 0)
+    const cam = new Camera(ship)
+    const screen = new Screen('screen')
+    const kb = new Keyboard()
+    const stop = Tick(16, update, render)
+
+    function update(ms, time) {
+      if (false) {
+        stop()
+        return
+      }
+      ship.update(ms, time, kb.actions())
+      cam.update(ms)
+    }
+
+    function render(ms, time) {
+      screen.draw(ms, ship, cam)
+    }
+  }
+
+  function throttle(fn, interval) {
+    let dirty = false
+    return function () {
+      if (dirty) return
+      dirty = true
+      setTimeout(() => { fn(); dirty = false }, interval)
+    }
+  }
+</script>
+
+</html>
