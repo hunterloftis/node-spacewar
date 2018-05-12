@@ -30,24 +30,31 @@
       this.ctx.save()
       this.ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`
       this.ctx.fillRect(0, 0, this.el.width, this.el.height)
-      this.drawStars(this.ctx, stars)
+      this.drawStars(this.ctx, stars, cam)
       this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
-      this.drawCam(this.ctx, ship, cam)
+      this.drawCam(this.ctx, cam)
       this.drawShip(this.ctx, time, ship)
       this.drawBullets(this.ctx, bullets)
       this.ctx.restore()
     }
-    drawStars(ctx, stars) {
+    drawStars(ctx, stars, cam) {
       ctx.save()
       stars.forEach(s => {
         ctx.fillStyle = s.c
-        const size = 1 + 3 * (1 - s.z / 100)
-        ctx.fillRect(s.x, s.y, size, size)
+        const ratio = (1 - s.z / 100)
+        const size = 1 + 3 * ratio
+        let x = s.x - cam.x
+        let y = s.y - cam.y
+        while (x < 0) x += this.width
+        while (x > this.width) x -= this.width
+        while (y < 0) y += this.height
+        while (y > this.height) y -= this.height
+        ctx.fillRect(x, y, size, size)
       })
       ctx.restore()
     }
-    drawCam(ctx, ship, cam) {
-
+    drawCam(ctx, cam) {
+      ctx.translate(-cam.x, -cam.y)
     }
     drawShip(ctx, time, ship) {
       const len = Math.sqrt(ship.size * ship.size * 0.5)
@@ -251,12 +258,20 @@
 
   class Camera {
     constructor(ship) {
+      this.lead = ship.size * 10
       this.ship = ship
+      this.delay = 500
       this.x = this.ship.x
       this.y = this.ship.y
     }
     update(ms) {
-
+      const tx = this.ship.x + this.lead * Math.cos(this.ship.angle)
+      const ty = this.ship.y + this.lead * Math.sin(this.ship.angle)
+      const dx = tx - this.x
+      const dy = ty - this.y
+      const t = Math.min(1, ms / this.delay)
+      this.x += dx * t
+      this.y += dy * t
     }
   }
 
@@ -279,13 +294,7 @@
       }
     }
     update(ms, width, height) {
-      this.points.forEach(p => {
-        p.x -= this.vel / p.z
-        if (p.x < 0) {
-          p.x += width
-          p.y = Math.random() * height
-        }
-      })
+
     }
     frame() {
       return this.points
@@ -336,8 +345,8 @@
       bullets.forEach(b => {
         if (!b.update(ms, time)) bullets.delete(b)
       })
-      cam.update(ms)
       stars.update(ms, screen.width, screen.height)
+      cam.update(ms)
     }
 
     function render(ms, time) {
