@@ -14,4 +14,13 @@ class Bullet {
     this.y += vy
     return time < this.death
   }
+  hits(x, y, r) {
+    const dx = this.x - x
+    const dy = this.y - y
+    const d = Math.sqrt(dx * dx + dy * dy)
+    return d < this.size + r
+  }
+  splash() {
+    this.death = 0
+  }
 }

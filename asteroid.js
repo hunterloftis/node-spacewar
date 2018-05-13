@@ -8,16 +8,14 @@ class Asteroid {
     this.y = d * Math.sin(a)
     this.angle = Math.random() * Math.PI * 2
     this.vel = 1
+    this.alive = true
   }
-  update(ms, bullets) {
+  update(ms) {
     this.x += this.vel * Math.cos(this.angle)
     this.y += this.vel * Math.sin(this.angle)
-    const hit = bullets.find(b => {
-      const dx = this.x - b.x
-      const dy = this.y - b.y
-      const d = Math.sqrt(dx * dx + dy * dy)
-      return d < this.size + b.size
-    })
-    return !hit
+    return this.alive
+  }
+  destroy() {
+    this.alive = false
   }
 }

@@ -37,9 +37,16 @@
       bullets.forEach(b => {
         if (!b.update(ms, time)) bullets.delete(b)
       })
-      const bArray = Array.from(bullets)
       asteroids.forEach(a => {
-        if (!a.update(ms, bArray)) asteroids.delete(a)
+        if (!a.update(ms)) asteroids.delete(a)
+      })
+      bullets.forEach(b => {
+        asteroids.forEach(a => {
+          if (b.hits(a.x, a.y, a.size)) {
+            b.splash()
+            a.destroy()
+          }
+        })
       })
       cam.update(ms, ship, limit, screen.width, screen.height)
     }
