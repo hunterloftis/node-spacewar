@@ -101,16 +101,16 @@ class Screen {
   }
   drawAsteroids(ctx, asteroids) {
     ctx.save()
-    ctx.beginPath()
     ctx.fillStyle = '#330000'
     ctx.strokeStyle = '#ff7700'
     ctx.lineWidth = 5
     asteroids.forEach(a => {
+      ctx.beginPath()
       ctx.moveTo(a.x + a.size, a.y)
       ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.stroke()
     })
-    ctx.fill()
-    ctx.stroke()
     ctx.restore()
   }
 }
