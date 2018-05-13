@@ -53,7 +53,8 @@
 
     function render(ms, time) {
       const sh = ship.frame()
-      screen.draw(ms, time, sh, cam, bullets, stars.frame(), asteroids)
+      const bs = Array.from(bullets).map(b => b.frame())
+      screen.draw(ms, time, sh, cam, bs, stars.frame(), asteroids)
       audio.play(ms, time, sh)
     }
   }

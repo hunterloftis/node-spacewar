@@ -97,6 +97,13 @@ class Screen {
     })
     ctx.fill()
     ctx.stroke()
+    ctx.beginPath()
+    bullets.forEach(b => {
+      if (!b.splashed) return
+      ctx.moveTo(b.x, b.y)
+      ctx.arc(b.x, b.y, b.size * 2, 0, Math.PI * 2)
+    })
+    ctx.fill()
     ctx.restore()
   }
   drawAsteroids(ctx, asteroids) {
