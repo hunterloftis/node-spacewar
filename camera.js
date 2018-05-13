@@ -7,7 +7,7 @@ class Camera {
   update(ms, ship, limit, width, height) {
     const mx = limit - width * 0.5
     const my = limit - height * 0.5
-    const lead = ship.size * 15
+    const lead = ship.size * 10
     const tx = ship.x + lead * Math.cos(ship.angle)
     const ty = ship.y + lead * Math.sin(ship.angle)
     const dx = tx - this.x

@@ -26,25 +26,29 @@
     const asteroids = new Set()
     const stop = Tick(16, update, render)
 
-    for (let i = 0; i < 25; i++) asteroids.add(new Asteroid(1000))
+    let lasteroid = 0
 
     function update(ms, time) {
       if (false) {
         stop()
         return
       }
+      if (asteroids.size < 50 && lasteroid < time - 500) {
+        asteroids.add(new Asteroid(limit))
+        lasteroid = time
+      }
       ship.update(ms, time, kb.actions(), bullets, limit)
       bullets.forEach(b => {
         if (!b.update(ms, time)) bullets.delete(b)
       })
       asteroids.forEach(a => {
-        if (!a.update(ms)) asteroids.delete(a)
+        if (!a.update(ms, limit)) asteroids.delete(a)
       })
       bullets.forEach(b => {
         asteroids.forEach(a => {
           if (b.hits(a.x, a.y, a.size)) {
             b.splash()
-            a.destroy()
+            a.hurt(1)
           }
         })
       })

@@ -11,10 +11,11 @@ class Ship {
     this.drag = 0.002
     this.speed = 0.05
     this.agility = 0.003
-    this.bulletInterval = 100
+    this.bulletMin = 70
+    this.bulletInterval = this.bulletMin
     this.bulletNext = 0
-    this.spread = 0.25
-    this.kick = 0.25
+    this.spread = 0.1
+    this.kick = 0.1
     this.events = new Set()
   }
   update(ms, time, actions, bullets, limit) {
@@ -49,12 +50,17 @@ class Ship {
     this.y += ay
   }
   shoot(ms, time, shooting, bullets) {
-    if (!shooting) return
+    if (!shooting) {
+      this.bulletInterval = Math.max(this.bulletMin, this.bulletInterval * 0.99)
+      return
+    }
     if (this.bulletNext > time) return
-    const bx = this.x + this.size * Math.cos(this.angle) * 2
-    const by = this.y + this.size * Math.sin(this.angle) * 2
-    const ba = this.angle + (Math.random() - 0.5) * this.spread
+    const ba = this.angle + (Math.random() - 0.5) * this.spread * Math.PI
+    const bx = this.x + this.size * Math.cos(ba) * 2
+    const by = this.y + this.size * Math.sin(ba) * 2
+
     bullets.add(new Bullet(bx, by, ba, time))
+    this.bulletInterval *= 1.05
     this.bulletNext = time + this.bulletInterval
     this.x += this.kick * -Math.cos(this.angle)
     this.y += this.kick * -Math.sin(this.angle)

@@ -1,21 +1,32 @@
 class Asteroid {
-  constructor(radius) {
-    this.size = 25 + Math.random() * 50
-    const a = Math.random() * Math.PI * 2
-    const r = radius - this.size * 0.5
-    const d = Math.sqrt(Math.random() * r * r)
-    this.x = d * Math.cos(a)
-    this.y = d * Math.sin(a)
-    this.angle = Math.random() * Math.PI * 2
+  constructor(limit) {
+    this.size = 15 + Math.random() * 30
+    const l = limit + this.size
+    if (Math.random() > 0.5) {
+      this.x = Math.random() > 0.5 ? l : -l
+      this.y = (Math.random() - 0.5) * limit
+    } else {
+      this.x = (Math.random() - 0.5) * limit
+      this.y = Math.random() > 0.5 ? l : -l
+    }
+    const tx = (Math.random() - 0.5) * limit
+    const ty = (Math.random() - 0.5) * limit
+    const dx = tx - this.x
+    const dy = ty - this.y
+    this.angle = Math.atan2(dy, dx)
     this.vel = 1
-    this.alive = true
+    this.health = 2
   }
-  update(ms) {
+  update(ms, limit) {
     this.x += this.vel * Math.cos(this.angle)
     this.y += this.vel * Math.sin(this.angle)
-    return this.alive
+    const lim = limit + this.size * 2
+    if (Math.abs(this.x) > lim || Math.abs(this.y) > lim) {
+      this.health = 0
+    }
+    return this.health > 0
   }
-  destroy() {
-    this.alive = false
+  hurt(n) {
+    this.health -= n
   }
 }
