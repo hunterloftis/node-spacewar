@@ -82,6 +82,7 @@ class Ship {
       angle: this.angle,
       thrusting: this.thrusting,
       turning: this.turning,
+      callsign: 'Hunter',
     }
     this.events.clear()
     return f

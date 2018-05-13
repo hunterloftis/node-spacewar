@@ -53,6 +53,7 @@ class Screen {
     const len = Math.sqrt(ship.size * ship.size * 0.5)
     ctx.save()
     ctx.translate(ship.x, ship.y)
+    ctx.save()
     ctx.rotate(ship.angle)
     ctx.beginPath()
     ctx.fillStyle = '#00bbbb'
@@ -82,6 +83,12 @@ class Screen {
       ctx.arc(ship.size * 1.9, 0, ship.size * 1.5, 0, Math.PI * 2)
       ctx.fill()
     }
+    ctx.restore()
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '14px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'top'
+    ctx.fillText(ship.callsign, 0, ship.size * 2);
     ctx.restore()
   }
   drawBullets(ctx, bullets) {
