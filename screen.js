@@ -18,7 +18,7 @@ class Screen {
   }
   draw(ms, time, ship, cam, bullets, stars, asteroids, smoke) {
     this.frame++
-    const opacity = Math.min(1, ms / 60)
+    const opacity = 1 //Math.min(1, ms / 60)
     this.ctx.save()
     this.ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`
     this.ctx.fillRect(0, 0, this.el.width, this.el.height)
@@ -67,33 +67,35 @@ class Screen {
     ctx.translate(ship.x, ship.y)
     ctx.save()
     ctx.rotate(ship.angle)
-    ctx.beginPath()
-    ctx.fillStyle = '#00ffff'
-    ctx.strokeStyle = '#00ffff'
-    ctx.lineWidth = 1
-    ctx.moveTo(ship.size, 0)
-    ctx.lineTo(-len, ship.size)
-    ctx.lineTo(-len * 1.2, ship.size)
-    ctx.lineTo(-len * 0.5, len * 0.5)
-    ctx.lineTo(-len, 0)
-    ctx.lineTo(-len * 0.5, -len * 0.5)
-    ctx.lineTo(-len * 1.2, -ship.size)
-    ctx.lineTo(-len, -ship.size)
-    ctx.closePath()
-    ctx.fill()
-    ctx.stroke()
-    if (ship.thrusting && this.frame % 4 === 0) {
+    if (ship.health > 0) {
       ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.arc(-ship.size, len * 0.5, len * 0.75, 0, Math.PI * 2)
-      ctx.arc(-ship.size, -len * 0.5, len * 0.75, 0, Math.PI * 2)
+      ctx.fillStyle = '#00ffff'
+      ctx.strokeStyle = '#00ffff'
+      ctx.lineWidth = 1
+      ctx.moveTo(ship.size, 0)
+      ctx.lineTo(-len, ship.size)
+      ctx.lineTo(-len * 1.2, ship.size)
+      ctx.lineTo(-len * 0.5, len * 0.5)
+      ctx.lineTo(-len, 0)
+      ctx.lineTo(-len * 0.5, -len * 0.5)
+      ctx.lineTo(-len * 1.2, -ship.size)
+      ctx.lineTo(-len, -ship.size)
+      ctx.closePath()
       ctx.fill()
-    }
-    if (ship.snapshot.shooting) {
-      ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.arc(ship.size * 1.75, 0, ship.size * 1.25, 0, Math.PI * 2)
-      ctx.fill()
+      ctx.stroke()
+      if (ship.thrusting && this.frame % 4 === 0) {
+        ctx.beginPath()
+        ctx.fillStyle = '#ffffff'
+        ctx.arc(-ship.size, len * 0.5, len * 0.75, 0, Math.PI * 2)
+        ctx.arc(-ship.size, -len * 0.5, len * 0.75, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      if (ship.snapshot.shooting) {
+        ctx.beginPath()
+        ctx.fillStyle = '#ffffff'
+        ctx.arc(ship.size * 1.75, 0, ship.size * 1.25, 0, Math.PI * 2)
+        ctx.fill()
+      }
     }
     if (ship.snapshot.damaged) {
       const x = (Math.random() - 0.5) * ship.size * 2
@@ -104,12 +106,19 @@ class Screen {
       ctx.arc(x, y, r, 0, Math.PI * 2)
       ctx.fill()
     }
+    if (ship.snapshot.exploded) {
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.arc(0, 0, ship.size * 5, 0, Math.PI * 2)
+      ctx.fill()
+    }
     ctx.restore()
     ctx.fillStyle = '#ffffff'
     ctx.font = '14px sans-serif'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
-    ctx.fillText(ship.callsign, 0, ship.size * 2.5);
+    const text = ship.health > 0 ? ship.callsign : 'Press [space] to respawn'
+    ctx.fillText(text, 0, ship.size * 2.5);
     ctx.restore()
   }
   drawBullets(ctx, bullets) {
