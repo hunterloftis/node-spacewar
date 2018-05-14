@@ -17,7 +17,7 @@ class Asteroid {
     const angle = Math.atan2(dy, dx)
     this.body = new Body(x, y, r, 0)
     this.body.moveAngle(1, angle)
-    this.health = 2
+    this.health = Math.ceil(5 * r / 45)
   }
   update(ms, limit) {
     this.body.update(ms)

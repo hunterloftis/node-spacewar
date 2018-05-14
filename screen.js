@@ -92,7 +92,7 @@ class Screen {
     if (ship.snapshot.shooting) {
       ctx.beginPath()
       ctx.fillStyle = '#ffffff'
-      ctx.arc(ship.size * 1.9, 0, ship.size * 1.5, 0, Math.PI * 2)
+      ctx.arc(ship.size * 1.75, 0, ship.size * 1.25, 0, Math.PI * 2)
       ctx.fill()
     }
     if (ship.snapshot.damaged) {
@@ -115,8 +115,8 @@ class Screen {
   drawBullets(ctx, bullets) {
     ctx.save()
     ctx.beginPath()
-    ctx.fillStyle = '#C2F9BB'
-    ctx.strokeStyle = '#C2F9BB'
+    ctx.fillStyle = '#fff577'
+    ctx.strokeStyle = '#E8C547'
     ctx.lineWidth = 5
     bullets.forEach(b => {
       ctx.moveTo(b.x, b.y)
@@ -147,16 +147,13 @@ class Screen {
   }
   drawAsteroids(ctx, asteroids) {
     ctx.save()
+    ctx.beginPath()
     ctx.fillStyle = '#D90368'
-    ctx.strokeStyle = '#ff7700'
-    ctx.lineWidth = 5
     asteroids.forEach(a => {
-      ctx.beginPath()
-      ctx.moveTo(a.body.x + a.body.r, a.body.y)
+      ctx.moveTo(a.body.x, a.body.y)
       ctx.arc(a.body.x, a.body.y, a.body.r, 0, Math.PI * 2)
-      ctx.fill()
-      // ctx.stroke()
     })
+    ctx.fill()
     ctx.restore()
   }
 }
