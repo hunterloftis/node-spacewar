@@ -16,7 +16,7 @@ class Screen {
     this.width = this.el.width = window.innerWidth
     this.height = this.el.height = window.innerHeight
   }
-  draw(ms, time, ship, cam, bullets, stars, asteroids, bounds) {
+  draw(ms, time, ship, cam, bullets, stars, asteroids, smoke) {
     this.frame++
     const opacity = Math.min(1, ms / 60)
     this.ctx.save()
@@ -27,6 +27,7 @@ class Screen {
     this.drawCam(this.ctx, cam)
     this.drawAsteroids(this.ctx, asteroids)
     this.drawBullets(this.ctx, bullets)
+    this.drawSmoke(this.ctx, smoke)
     this.drawShip(this.ctx, time, ship)
     this.ctx.restore()
   }
@@ -44,6 +45,17 @@ class Screen {
       while (y > this.height) y -= this.height
       ctx.fillRect(x, y, size, size)
     })
+    ctx.restore()
+  }
+  drawSmoke(ctx, smoke) {
+    ctx.save()
+    ctx.fillStyle = 'rgba(100, 100, 100, 1)'
+    ctx.beginPath()
+    smoke.forEach(s => {
+      ctx.moveTo(s.body.x, s.body.y)
+      ctx.arc(s.body.x, s.body.y, s.body.r, 0, Math.PI * 2)
+    })
+    ctx.fill()
     ctx.restore()
   }
   drawCam(ctx, cam) {
@@ -93,11 +105,11 @@ class Screen {
       ctx.fill()
     }
     ctx.restore()
-    ctx.fillStyle = '#ff00ff'
+    ctx.fillStyle = '#ffffff'
     ctx.font = '14px sans-serif'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
-    ctx.fillText(ship.callsign, 0, ship.size * 2);
+    ctx.fillText(ship.callsign, 0, ship.size * 2.5);
     ctx.restore()
   }
   drawBullets(ctx, bullets) {

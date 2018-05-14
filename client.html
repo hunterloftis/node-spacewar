@@ -2,6 +2,7 @@
 <canvas id='screen' width='640' height='480' style='cursor: none;' />
 <script src='body.js'></script>
 <script src='ship.js'></script>
+<script src='smoke.js'></script>
 <script src='camera.js'></script>
 <script src='bullet.js'></script>
 <script src='screen.js'></script>
@@ -19,6 +20,7 @@
     const stars = new Stars(0.0001)
     const kb = new Keyboard()
     const audio = new Audio()
+    const smoke = new Set()
 
     const limit = 1000
     const ship = new Ship(0, 0)
@@ -38,12 +40,15 @@
         asteroids.add(new Asteroid(limit))
         lasteroid = time
       }
-      ship.update(ms, time, kb.actions(), bullets, limit)
+      ship.update(ms, time, kb.actions(), bullets, limit, smoke)
       bullets.forEach(b => {
         if (!b.update(ms, time)) bullets.delete(b)
       })
       asteroids.forEach(a => {
         if (!a.update(ms, limit)) asteroids.delete(a)
+      })
+      smoke.forEach(s => {
+        if (!s.update(ms, time)) smoke.delete(s)
       })
       bullets.forEach(b => {
         asteroids.forEach(a => {
@@ -64,7 +69,7 @@
     function render(ms, time) {
       const sh = ship.frame()
       const bs = Array.from(bullets).map(b => b.frame())
-      screen.draw(ms, time, sh, cam, bs, stars.frame(), asteroids)
+      screen.draw(ms, time, sh, cam, bs, stars.frame(), asteroids, smoke)
       audio.play(ms, time, sh)
     }
   }

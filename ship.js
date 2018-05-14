@@ -6,20 +6,21 @@ class Ship {
     this.turning = 0
     this.speed = 0.05
     this.agility = 0.003
-    this.bulletMin = 70
-    this.bulletInterval = this.bulletMin
+    this.bulletInterval = this.bulletMin = 70
     this.bulletNext = 0
     this.spread = 0.1
     this.kick = 0.1
     this.snapshot = {}
-    this.health = 20
+    this.health = this.maxHealth = 50
+    this.smokeNext = 0
   }
-  update(ms, time, actions, bullets, limit) {
+  update(ms, time, actions, bullets, limit, smoke) {
     this.body.update(ms)
     this.turn(ms, actions.left, actions.right)
     this.thrust(ms, actions.forward)
     this.shoot(ms, time, actions.shoot, bullets)
     this.body.contain(limit)
+    this.leak(time, smoke)
   }
   turn(ms, left, right) {
     const a = this.angle
@@ -51,6 +52,19 @@ class Ship {
   damage(n) {
     this.health -= n
     this.snapshot.damaged = true
+  }
+  leak(time, smoke) {
+    if (time < this.smokeNext) return
+    const h = Math.max(0, this.health / this.maxHealth)
+    if (h < 0.5) {
+      const ba = this.angle + Math.PI + (Math.random() - 0.5) * Math.PI * 0.5
+      const bx = this.body.x + this.body.r * Math.cos(ba) * 1.25
+      const by = this.body.y + this.body.r * Math.sin(ba) * 1.25
+      const s = new Smoke(bx, by, this.body.r * 1.25)
+      s.body.moveAngle(Math.random(), Math.random() * Math.PI * 2)
+      smoke.add(s)
+      this.smokeNext = time + 50 + 1000 * h
+    }
   }
   frame() {
     const f = {
