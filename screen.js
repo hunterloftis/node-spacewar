@@ -120,8 +120,8 @@ class Screen {
     ctx.lineWidth = 5
     asteroids.forEach(a => {
       ctx.beginPath()
-      ctx.moveTo(a.x + a.size, a.y)
-      ctx.arc(a.x, a.y, a.size, 0, Math.PI * 2)
+      ctx.moveTo(a.body.x + a.body.r, a.body.y)
+      ctx.arc(a.body.x, a.body.y, a.body.r, 0, Math.PI * 2)
       ctx.fill()
       ctx.stroke()
     })

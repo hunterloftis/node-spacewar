@@ -47,7 +47,7 @@
       })
       bullets.forEach(b => {
         asteroids.forEach(a => {
-          if (b.hits(a.x, a.y, a.size)) {
+          if (b.body.hits(a.body)) {
             b.splash()
             a.hurt(1)
           }

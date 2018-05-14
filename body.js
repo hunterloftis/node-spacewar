@@ -29,11 +29,6 @@ class Body {
     const d = Math.sqrt(dx * dx + dy * dy)
     return d < this.r + body.r
   }
-  offset(dist, angle) {
-    const x = dist * Math.cos(angle)
-    const y = dist * Math.sin(angle)
-    return [this.x + x, this.y + y]
-  }
   contain(limit) {
     const l = limit - this.r
     if (this.x < -l) this.x = -l
