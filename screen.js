@@ -77,16 +77,19 @@ class Screen {
       ctx.arc(-ship.size, -len * 0.5, len * 0.75, 0, Math.PI * 2)
       ctx.fill()
     }
-    if (ship.events.includes('shoot')) {
+    if (ship.snapshot.shooting) {
       ctx.beginPath()
       ctx.fillStyle = '#ffffff'
       ctx.arc(ship.size * 1.9, 0, ship.size * 1.5, 0, Math.PI * 2)
       ctx.fill()
     }
     if (ship.snapshot.damaged) {
+      const x = (Math.random() - 0.5) * ship.size * 2
+      const y = (Math.random() - 0.5) * ship.size * 2
+      const r = ship.size * 1.5
       ctx.beginPath()
-      ctx.fillStyle = '#ffffff'
-      ctx.arc(0, 0, ship.size * 2.5, 0, Math.PI * 2)
+      ctx.fillStyle = Math.random() > 0.5 ? '#ffff99' : '#ff9999'
+      ctx.arc(x, y, r, 0, Math.PI * 2)
       ctx.fill()
     }
     ctx.restore()

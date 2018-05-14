@@ -11,9 +11,8 @@ class Ship {
     this.bulletNext = 0
     this.spread = 0.1
     this.kick = 0.1
-    this.events = new Set() // TODO: use frame snapshot instead
     this.snapshot = {}
-    this.health = 5
+    this.health = 20
   }
   update(ms, time, actions, bullets, limit) {
     this.body.update(ms)
@@ -47,7 +46,7 @@ class Ship {
     this.bulletInterval *= 1.05
     this.bulletNext = time + this.bulletInterval
     this.body.moveAngle(-this.kick, this.angle)
-    this.events.add('shoot')
+    this.snapshot.shooting = true
   }
   damage(n) {
     this.health -= n
@@ -55,7 +54,6 @@ class Ship {
   }
   frame() {
     const f = {
-      events: Array.from(this.events),
       snapshot: this.snapshot,
       x: this.body.x,
       y: this.body.y,
@@ -65,7 +63,6 @@ class Ship {
       turning: this.turning,
       callsign: 'Hunter',
     }
-    this.events.clear()
     this.snapshot = {}
     return f
   }

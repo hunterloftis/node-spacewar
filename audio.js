@@ -18,7 +18,7 @@ class Audio {
     document.addEventListener('click', resume)
   }
   play(ms, time, ship) {
-    if (ship.events.includes('shoot')) this.shoot()
+    if (ship.snapshot.shooting) this.shoot()
     if (ship.thrusting) this.engines.connect(this.context.destination)
     else this.engines.disconnect()
   }

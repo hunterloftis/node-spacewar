@@ -55,7 +55,7 @@
       })
       asteroids.forEach(a => {
         if (a.body.hits(ship.body)) {
-          ship.damage(2)
+          ship.damage(1)
         }
       })
       cam.update(ms, ship, limit, screen.width, screen.height)
