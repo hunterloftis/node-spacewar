@@ -25,9 +25,9 @@ class Screen {
     this.drawStars(this.ctx, stars, cam)
     this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
     this.drawCam(this.ctx, cam)
-    this.drawShip(this.ctx, time, ship)
     this.drawAsteroids(this.ctx, asteroids)
     this.drawBullets(this.ctx, bullets)
+    this.drawShip(this.ctx, time, ship)
     this.ctx.restore()
   }
   drawStars(ctx, stars, cam) {
@@ -81,6 +81,12 @@ class Screen {
       ctx.beginPath()
       ctx.fillStyle = '#ffffff'
       ctx.arc(ship.size * 1.9, 0, ship.size * 1.5, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    if (ship.snapshot.damaged) {
+      ctx.beginPath()
+      ctx.fillStyle = '#ffffff'
+      ctx.arc(0, 0, ship.size * 2.5, 0, Math.PI * 2)
       ctx.fill()
     }
     ctx.restore()
