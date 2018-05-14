@@ -1,6 +1,6 @@
 class Ship {
   constructor(x, y) {
-    this.body = new Body(x, y, 12, 0.002)
+    this.body = new Body(x, y, 14, 0.002)
     this.angle = -Math.PI * 0.5
     this.thrusting = false
     this.turning = 0

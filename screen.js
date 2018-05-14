@@ -49,7 +49,7 @@ class Screen {
   }
   drawSmoke(ctx, smoke) {
     ctx.save()
-    ctx.fillStyle = 'rgba(100, 100, 100, 1)'
+    ctx.fillStyle = '#643A71'
     ctx.beginPath()
     smoke.forEach(s => {
       ctx.moveTo(s.body.x, s.body.y)
@@ -68,9 +68,9 @@ class Screen {
     ctx.save()
     ctx.rotate(ship.angle)
     ctx.beginPath()
-    ctx.fillStyle = '#00bbbb'
+    ctx.fillStyle = '#00ffff'
     ctx.strokeStyle = '#00ffff'
-    ctx.lineWidth = 3
+    ctx.lineWidth = 1
     ctx.moveTo(ship.size, 0)
     ctx.lineTo(-len, ship.size)
     ctx.lineTo(-len * 1.2, ship.size)
@@ -100,7 +100,7 @@ class Screen {
       const y = (Math.random() - 0.5) * ship.size * 2
       const r = ship.size * 1.5
       ctx.beginPath()
-      ctx.fillStyle = Math.random() > 0.5 ? '#ffff99' : '#ff9999'
+      ctx.fillStyle = Math.random() > 0.5 ? '#D90368' : '#FFaaff'
       ctx.arc(x, y, r, 0, Math.PI * 2)
       ctx.fill()
     }
@@ -115,8 +115,8 @@ class Screen {
   drawBullets(ctx, bullets) {
     ctx.save()
     ctx.beginPath()
-    ctx.fillStyle = '#ffffff'
-    ctx.strokeStyle = '#ffff00'
+    ctx.fillStyle = '#C2F9BB'
+    ctx.strokeStyle = '#C2F9BB'
     ctx.lineWidth = 5
     bullets.forEach(b => {
       ctx.moveTo(b.x, b.y)
@@ -126,17 +126,28 @@ class Screen {
     ctx.fill()
     ctx.stroke()
     ctx.beginPath()
+    ctx.fillStyle = '#ffffff'
+    ctx.strokeStyle = '#ffffff'
+    ctx.lineWidth = 3
     bullets.forEach(b => {
       if (!b.splashed) return
       ctx.moveTo(b.x, b.y)
-      ctx.arc(b.x, b.y, b.size * 2, 0, Math.PI * 2)
+      ctx.arc(b.x, b.y, b.size * 1, 0, Math.PI * 2)
+      for (let i = 0; i < 10; i++) {
+        const a = Math.random() * Math.PI * 2
+        const x = b.size * 2 * Math.cos(a)
+        const y = b.size * 2 * Math.sin(a)
+        ctx.moveTo(b.x, b.y)
+        ctx.lineTo(b.x + x, b.y + y)
+      }
     })
     ctx.fill()
+    ctx.stroke()
     ctx.restore()
   }
   drawAsteroids(ctx, asteroids) {
     ctx.save()
-    ctx.fillStyle = '#330000'
+    ctx.fillStyle = '#D90368'
     ctx.strokeStyle = '#ff7700'
     ctx.lineWidth = 5
     asteroids.forEach(a => {
@@ -144,7 +155,7 @@ class Screen {
       ctx.moveTo(a.body.x + a.body.r, a.body.y)
       ctx.arc(a.body.x, a.body.y, a.body.r, 0, Math.PI * 2)
       ctx.fill()
-      ctx.stroke()
+      // ctx.stroke()
     })
     ctx.restore()
   }
