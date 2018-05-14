@@ -17,6 +17,8 @@ class Bullet {
     const f = {
       x: this.body.x,
       y: this.body.y,
+      x1: this.body.x1,
+      y1: this.body.y1,
       size: this.body.r,
       angle: this.angle,
       splashed: this.splashed,

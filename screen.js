@@ -18,10 +18,8 @@ class Screen {
   }
   draw(ms, time, ship, cam, bullets, stars, asteroids, smoke) {
     this.frame++
-    const opacity = 1 //Math.min(1, ms / 60)
     this.ctx.save()
-    this.ctx.fillStyle = `rgba(0, 0, 0, ${opacity})`
-    this.ctx.fillRect(0, 0, this.el.width, this.el.height)
+    this.ctx.clearRect(0, 0, this.el.width, this.el.height)
     this.drawStars(this.ctx, stars, cam)
     this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
     this.drawCam(this.ctx, cam)
@@ -117,23 +115,26 @@ class Screen {
     ctx.font = '14px sans-serif'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'
-    const text = ship.health > 0 ? ship.callsign : 'Press [space] to respawn'
+    const text = ship.health > 0 ? ship.callsign : 'Press [space] to try again'
     ctx.fillText(text, 0, ship.size * 2.5);
     ctx.restore()
   }
   drawBullets(ctx, bullets) {
     ctx.save()
-    ctx.beginPath()
-    ctx.fillStyle = '#fff577'
-    ctx.strokeStyle = '#E8C547'
-    ctx.lineWidth = 5
+    ctx.fillStyle = '#E8C547'
     bullets.forEach(b => {
-      ctx.moveTo(b.x, b.y)
-      ctx.arc(b.x, b.y, b.size, b.angle - Math.PI * 0.7, b.angle + Math.PI * 0.7)
-      ctx.lineTo(b.x, b.y)
+      ctx.save()
+      ctx.translate(b.x, b.y)
+      ctx.rotate(b.angle)
+      ctx.beginPath()
+      ctx.moveTo(-b.size * 2, 0)
+      ctx.lineTo(0, -b.size)
+      ctx.lineTo(b.size, 0)
+      ctx.lineTo(0, b.size)
+      ctx.closePath()
+      ctx.fill()
+      ctx.restore()
     })
-    ctx.fill()
-    ctx.stroke()
     ctx.beginPath()
     ctx.fillStyle = '#ffffff'
     ctx.strokeStyle = '#ffffff'

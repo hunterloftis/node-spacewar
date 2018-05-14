@@ -85,7 +85,7 @@ class Ship {
       angle: this.angle,
       thrusting: this.thrusting,
       turning: this.turning,
-      callsign: 'Hunter',
+      callsign: 'Amanda',
       health: this.health,
       burning: this.health <= 0 && this.deadTime < 4000,
     }
