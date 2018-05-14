@@ -87,6 +87,7 @@ class Ship {
       turning: this.turning,
       callsign: 'Hunter',
       health: this.health,
+      burning: this.health <= 0 && this.deadTime < 4000,
     }
     this.snapshot = {}
     return f

@@ -97,7 +97,7 @@ class Screen {
         ctx.fill()
       }
     }
-    if (ship.snapshot.damaged) {
+    if (ship.burning || ship.snapshot.damaged) {
       const x = (Math.random() - 0.5) * ship.size * 2
       const y = (Math.random() - 0.5) * ship.size * 2
       const r = ship.size * 1.5
