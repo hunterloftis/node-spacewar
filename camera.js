@@ -1,15 +1,15 @@
 class Camera {
-  constructor(x, y) {
+  constructor(ship) {
     this.delay = 1000
-    this.x = x
-    this.y = y
+    this.x = ship.body.x
+    this.y = ship.body.y
   }
   update(ms, ship, limit, width, height) {
     const mx = limit - width * 0.5
     const my = limit - height * 0.5
-    const lead = ship.size * 10
-    const tx = ship.x + lead * Math.cos(ship.angle)
-    const ty = ship.y + lead * Math.sin(ship.angle)
+    const lead = ship.body.r * 10
+    const tx = ship.body.x + lead * Math.cos(ship.angle)
+    const ty = ship.body.y + lead * Math.sin(ship.angle)
     const dx = tx - this.x
     const dy = ty - this.y
     const t = Math.min(1, ms / this.delay)

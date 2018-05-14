@@ -84,7 +84,7 @@ class Screen {
       ctx.fill()
     }
     ctx.restore()
-    ctx.fillStyle = '#ffffff'
+    ctx.fillStyle = '#ff00ff'
     ctx.font = '14px sans-serif'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'top'

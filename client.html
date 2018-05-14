@@ -1,5 +1,6 @@
 <html>
-<canvas id='screen' width='640' height='480' />
+<canvas id='screen' width='640' height='480' style='cursor: none;' />
+<script src='body.js'></script>
 <script src='ship.js'></script>
 <script src='camera.js'></script>
 <script src='bullet.js'></script>
@@ -21,7 +22,7 @@
 
     const limit = 1000
     const ship = new Ship(0, 0)
-    const cam = new Camera(ship.x, ship.y)
+    const cam = new Camera(ship)
     const bullets = new Set()
     const asteroids = new Set()
     const stop = Tick(16, update, render)
