@@ -44,6 +44,7 @@ function ships(state, action) {
         ship.bullet = state.time + ship.interval
         ship.interval *= 1.1
       }
+      contain(ship, state.limit)
     })
   }
 }
@@ -62,4 +63,12 @@ function integrate(body) {
 function moveAngle(body, dist, angle) {
   body.x += dist * Math.cos(angle)
   body.y += dist * Math.sin(angle)
+}
+
+function contain(body, limit) {
+  const l = limit - body.r
+  if (body.x < -l) body.x = -l
+  else if (body.x > l) body.x = l
+  if (body.y < -l) body.y = -l
+  else if (body.y > l) body.y = l
 }
