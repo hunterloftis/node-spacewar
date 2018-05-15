@@ -1,4 +1,4 @@
-import { integrate, moveAngle } from './bodies.js'
+import { integrate, moveAngle } from './bodies.mjs'
 
 export function asteroids(state, action) {
   if (!state.asteroids) state.asteroids = []

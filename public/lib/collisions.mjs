@@ -1,6 +1,6 @@
-import { damageAsteroid } from './asteroids.js'
-import { destroyBullet } from './bullets.js'
-import { damageShip } from './ships.js'
+import { damageAsteroid } from './asteroids.mjs'
+import { destroyBullet } from './bullets.mjs'
+import { damageShip } from './ships.mjs'
 
 export function collisions(state, action) {
   if (action.name === 'tick') {

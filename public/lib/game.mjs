@@ -1,8 +1,8 @@
-import { ships } from './ships.js'
-import { smokes } from './smokes.js'
-import { asteroids } from './asteroids.js'
-import { bullets } from './bullets.js'
-import { collisions } from './collisions.js'
+import { ships } from './ships.mjs'
+import { smokes } from './smokes.mjs'
+import { asteroids } from './asteroids.mjs'
+import { bullets } from './bullets.mjs'
+import { collisions } from './collisions.mjs'
 
 export class Game {
   constructor(limit) {

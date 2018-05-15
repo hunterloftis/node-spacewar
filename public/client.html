@@ -2,12 +2,12 @@
 <canvas id='screen' width='640' height='480' style='cursor: none;' />
 <script type="module">
 
-  import Screen from './lib/screen.js'
-  import Stars from './lib/stars.js'
-  import Keyboard from './lib/keyboard.js'
-  import Camera from './lib/camera.js'
-  import { Game, Action } from './lib/game.js'
-  import Tick from './lib/tick.js'
+  import Screen from './lib/screen.mjs'
+  import Stars from './lib/stars.mjs'
+  import Keyboard from './lib/keyboard.mjs'
+  import Camera from './lib/camera.mjs'
+  import { Game, Action } from './lib/game.mjs'
+  import Tick from './lib/tick.mjs'
 
   const screen = new Screen('screen')
   const stars = new Stars(0.0001)

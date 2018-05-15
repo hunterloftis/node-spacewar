@@ -4,6 +4,6 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node server"
+    "start": "node --experimental-modules server.mjs"
   }
 }
