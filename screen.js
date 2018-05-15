@@ -96,15 +96,16 @@ class Screen {
         //   ctx.fill()
         // }
       }
-      // if (ship.burning || ship.snapshot.damaged) {
-      //   const x = (Math.random() - 0.5) * ship.r * 2
-      //   const y = (Math.random() - 0.5) * ship.r * 2
-      //   const r = ship.r * 1.5
-      //   ctx.beginPath()
-      //   ctx.fillStyle = Math.random() > 0.5 ? '#D90368' : '#FFaaff'
-      //   ctx.arc(x, y, r, 0, Math.PI * 2)
-      //   ctx.fill()
-      // }
+      const exploded = ship.death && ship.death > time - 2000
+      if (ship.hurting || exploded) {
+        const x = (Math.random() - 0.5) * ship.r * 2
+        const y = (Math.random() - 0.5) * ship.r * 2
+        const r = ship.r * 1.5
+        ctx.beginPath()
+        ctx.fillStyle = Math.random() > 0.5 ? '#D90368' : '#FFaaff'
+        ctx.arc(x, y, r, 0, Math.PI * 2)
+        ctx.fill()
+      }
       // if (ship.snapshot.exploded) {
       //   ctx.beginPath()
       //   ctx.fillStyle = '#ffffff'

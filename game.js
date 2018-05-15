@@ -37,6 +37,7 @@ class Game {
     smokes(state, action) // TODO: filter this out from state()
     asteroids(state, action)
     bullets(state, action)
+    collisions(state, action)
     return new Event(action, state)
   }
   state() {
