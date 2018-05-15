@@ -19,7 +19,9 @@ export default class Screen {
   draw(ms, time, state, cam, stars) {
     this.frame++
     this.ctx.save()
-    this.ctx.clearRect(0, 0, this.el.width, this.el.height)
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+    this.ctx.fillRect(0, 0, this.el.width, this.el.height)
+    // this.ctx.clearRect(0, 0, this.el.width, this.el.height)
     this.drawStars(this.ctx, stars, cam)
     this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
     this.drawCam(this.ctx, cam)
