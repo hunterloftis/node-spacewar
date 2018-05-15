@@ -7,4 +7,11 @@ class Smoke {
     this.body.r *= 0.99
     return this.body.r > 3
   }
+  frame() {
+    return {
+      x: this.body.x,
+      y: this.body.y,
+      r: this.body.r,
+    }
+  }
 }

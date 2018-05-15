@@ -24,7 +24,4 @@ class Stars {
     }
     return points
   }
-  frame() {
-    return this.points
-  }
 }

@@ -16,17 +16,17 @@ class Screen {
     this.width = this.el.width = window.innerWidth
     this.height = this.el.height = window.innerHeight
   }
-  draw(ms, time, ship, cam, bullets, stars, asteroids, smoke) {
+  draw(ms, time, state, cam, stars) {
     this.frame++
     this.ctx.save()
     this.ctx.clearRect(0, 0, this.el.width, this.el.height)
     this.drawStars(this.ctx, stars, cam)
     this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
     this.drawCam(this.ctx, cam)
-    this.drawAsteroids(this.ctx, asteroids)
-    this.drawBullets(this.ctx, bullets)
-    this.drawSmoke(this.ctx, smoke)
-    this.drawShip(this.ctx, time, ship)
+    this.drawAsteroids(this.ctx, state.asteroids)
+    this.drawBullets(this.ctx, state.bullets)
+    this.drawSmokes(this.ctx, state.smokes)
+    this.drawShips(this.ctx, time, state.ships)
     this.ctx.restore()
   }
   drawStars(ctx, stars, cam) {
@@ -45,11 +45,11 @@ class Screen {
     })
     ctx.restore()
   }
-  drawSmoke(ctx, smoke) {
+  drawSmokes(ctx, smokes) {
     ctx.save()
     ctx.fillStyle = '#643A71'
     ctx.beginPath()
-    smoke.forEach(s => {
+    smokes.forEach(s => {
       ctx.moveTo(s.body.x, s.body.y)
       ctx.arc(s.body.x, s.body.y, s.body.r, 0, Math.PI * 2)
     })
@@ -59,65 +59,67 @@ class Screen {
   drawCam(ctx, cam) {
     ctx.translate(-cam.x, -cam.y)
   }
-  drawShip(ctx, time, ship) {
-    const len = Math.sqrt(ship.size * ship.size * 0.5)
-    ctx.save()
-    ctx.translate(ship.x, ship.y)
-    ctx.save()
-    ctx.rotate(ship.angle)
-    if (ship.health > 0) {
-      ctx.beginPath()
-      ctx.fillStyle = '#00ffff'
-      ctx.strokeStyle = '#00ffff'
-      ctx.lineWidth = 1
-      ctx.moveTo(ship.size, 0)
-      ctx.lineTo(-len, ship.size)
-      ctx.lineTo(-len * 1.2, ship.size)
-      ctx.lineTo(-len * 0.5, len * 0.5)
-      ctx.lineTo(-len, 0)
-      ctx.lineTo(-len * 0.5, -len * 0.5)
-      ctx.lineTo(-len * 1.2, -ship.size)
-      ctx.lineTo(-len, -ship.size)
-      ctx.closePath()
-      ctx.fill()
-      ctx.stroke()
-      if (ship.thrusting && this.frame % 4 === 0) {
+  drawShips(ctx, time, ships) {
+    ships.forEach(ship => {
+      const len = Math.sqrt(ship.r * ship.r * 0.5)
+      ctx.save()
+      ctx.translate(ship.x, ship.y)
+      ctx.save()
+      ctx.rotate(ship.angle)
+      if (ship.health > 0) {
         ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.arc(-ship.size, len * 0.5, len * 0.75, 0, Math.PI * 2)
-        ctx.arc(-ship.size, -len * 0.5, len * 0.75, 0, Math.PI * 2)
+        ctx.fillStyle = '#00ffff'
+        ctx.strokeStyle = '#00ffff'
+        ctx.lineWidth = 1
+        ctx.moveTo(ship.r, 0)
+        ctx.lineTo(-len, ship.r)
+        ctx.lineTo(-len * 1.2, ship.r)
+        ctx.lineTo(-len * 0.5, len * 0.5)
+        ctx.lineTo(-len, 0)
+        ctx.lineTo(-len * 0.5, -len * 0.5)
+        ctx.lineTo(-len * 1.2, -ship.r)
+        ctx.lineTo(-len, -ship.r)
+        ctx.closePath()
         ctx.fill()
+        ctx.stroke()
+        if (ship.thrusting && this.frame % 4 === 0) {
+          ctx.beginPath()
+          ctx.fillStyle = '#ffffff'
+          ctx.arc(-ship.r, len * 0.5, len * 0.75, 0, Math.PI * 2)
+          ctx.arc(-ship.r, -len * 0.5, len * 0.75, 0, Math.PI * 2)
+          ctx.fill()
+        }
+        // if (ship.snapshot.shooting) {
+        //   ctx.beginPath()
+        //   ctx.fillStyle = '#ffffff'
+        //   ctx.arc(ship.r * 1.75, 0, ship.r * 1.25, 0, Math.PI * 2)
+        //   ctx.fill()
+        // }
       }
-      if (ship.snapshot.shooting) {
-        ctx.beginPath()
-        ctx.fillStyle = '#ffffff'
-        ctx.arc(ship.size * 1.75, 0, ship.size * 1.25, 0, Math.PI * 2)
-        ctx.fill()
-      }
-    }
-    if (ship.burning || ship.snapshot.damaged) {
-      const x = (Math.random() - 0.5) * ship.size * 2
-      const y = (Math.random() - 0.5) * ship.size * 2
-      const r = ship.size * 1.5
-      ctx.beginPath()
-      ctx.fillStyle = Math.random() > 0.5 ? '#D90368' : '#FFaaff'
-      ctx.arc(x, y, r, 0, Math.PI * 2)
-      ctx.fill()
-    }
-    if (ship.snapshot.exploded) {
-      ctx.beginPath()
+      // if (ship.burning || ship.snapshot.damaged) {
+      //   const x = (Math.random() - 0.5) * ship.r * 2
+      //   const y = (Math.random() - 0.5) * ship.r * 2
+      //   const r = ship.r * 1.5
+      //   ctx.beginPath()
+      //   ctx.fillStyle = Math.random() > 0.5 ? '#D90368' : '#FFaaff'
+      //   ctx.arc(x, y, r, 0, Math.PI * 2)
+      //   ctx.fill()
+      // }
+      // if (ship.snapshot.exploded) {
+      //   ctx.beginPath()
+      //   ctx.fillStyle = '#ffffff'
+      //   ctx.arc(0, 0, ship.r * 5, 0, Math.PI * 2)
+      //   ctx.fill()
+      // }
+      ctx.restore()
       ctx.fillStyle = '#ffffff'
-      ctx.arc(0, 0, ship.size * 5, 0, Math.PI * 2)
-      ctx.fill()
-    }
-    ctx.restore()
-    ctx.fillStyle = '#ffffff'
-    ctx.font = '14px sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'top'
-    const text = ship.health > 0 ? ship.callsign : 'Press [space] to try again'
-    ctx.fillText(text, 0, ship.size * 2.5);
-    ctx.restore()
+      ctx.font = '14px sans-serif'
+      ctx.textAlign = 'center'
+      ctx.textBaseline = 'top'
+      const text = ship.health > 0 ? ship.callsign : 'Press [space] to try again'
+      ctx.fillText(text, 0, ship.r * 2.5);
+      ctx.restore()
+    })
   }
   drawBullets(ctx, bullets) {
     ctx.save()

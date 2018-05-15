@@ -6,17 +6,18 @@ class Keyboard {
       'ArrowUp': 'forward',
       ' ': 'shoot'
     }
-    this.state = { left: false, right: false, forward: false, shoot: false }
+    // this.state = { left: false, right: false, forward: false, shoot: false }
+    this.callback = () => { }
     document.addEventListener('keydown', e => { this.setKey(e, true) })
     document.addEventListener('keyup', e => { this.setKey(e, false) })
   }
-  setKey(e, state) {
-    const action = this.keys[e.key]
-    if (!action) return
-    this.state[action] = state
-    e.preventDefault()
+  onChange(callback) {
+    this.callback = callback
   }
-  actions() {
-    return this.state
+  setKey(e, state) {
+    const input = this.keys[e.key]
+    if (!input) return
+    this.callback(input, state)
+    e.preventDefault()
   }
 }
