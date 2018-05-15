@@ -163,8 +163,8 @@ class Screen {
     ctx.fillStyle = '#D90368'
     asteroids.forEach(a => {
       // TODO: draw polygon of a.edges edges
-      ctx.moveTo(a.body.x, a.body.y)
-      ctx.arc(a.body.x, a.body.y, a.body.r, 0, Math.PI * 2)
+      ctx.moveTo(a.x, a.y)
+      ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2)
     })
     ctx.fill()
     ctx.restore()

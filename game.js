@@ -28,6 +28,7 @@ class Game {
       this.events = this.events.slice(this.events.length - n)
     }
   }
+  // TODO: consider returning new state to Object.assign() into an empty object instead of making a deep copy at the beginning
   transform(prevState, action) {
     const state = cloneDeep(prevState)
     state.limit = this.limit
