@@ -6,6 +6,7 @@ class Game {
     this.frameState = {}
   }
   commit(action) {
+    // const now = performance.now()
     const event = new Event(action)
     this.trim(100)
     let insert = this.events.findIndex(e => e.action.time >= action.time)
@@ -18,6 +19,7 @@ class Game {
       const prev = this.events[i - 1] || new Event()
       this.events[i] = this.transform(prev.state, this.events[i].action)
     }
+    // if (Math.random() > 0.99) console.log('ms:', performance.now() - now)
     return this.state()
   }
   start() {

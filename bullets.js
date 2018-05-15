@@ -14,10 +14,13 @@ function createBullet(state, x, y, angle, time) {
     x, y, angle,
     x1: x, y1: y,
     lifetime: time + 1500,
-    splashed: false,
     drag: 0,
     r: 12,
   }
   moveAngle(b, 7, angle)
   state.bullets.push(b)
+}
+
+function destroyBullet(b) {
+  b.lifetime = 0
 }

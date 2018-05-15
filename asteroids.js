@@ -27,7 +27,7 @@ function asteroids(state, action) {
         x, y, r,
         x1: x, y1: y,
         drag: 0,
-        health: Math.ceil(5 * r / 45)
+        health: Math.ceil(30 * r / 45)
       }
       moveAngle(asteroid, 1, angle)
       state.asteroids.push(asteroid)
@@ -37,4 +37,8 @@ function asteroids(state, action) {
       integrate(asteroid)
     })
   }
+}
+
+function damageAsteroid(asteroid, n) {
+  asteroid.health -= n
 }

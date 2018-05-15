@@ -65,6 +65,15 @@ function ships(state, action) {
   }
 }
 
+function damageShip(ship, n, time) {
+  ship.hurting = true
+  ship.health -= n
+  if (ship.health <= 0) {
+    ship.drag = 0.005
+    ship.death = time
+  }
+}
+
 function integrate(body) {
   const vx = body.x - body.x1
   const vy = body.y - body.y1
