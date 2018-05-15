@@ -35,9 +35,9 @@ function ships(state, action) {
       if (ship.input.forward) moveAngle(ship, speed, ship.angle)
       if (ship.input.shoot && state.time >= ship.bullet) {
         const ba = ship.angle + (Math.random() - 0.5) * spread * Math.PI
-        const bx = ship.x + ship.r * Math.cos(ba)
-        const by = ship.y + ship.r * Math.sin(ba)
-        createBullet(state, bx, by, ship.angle, state.time)
+        const bx = ship.x + ship.r * Math.cos(ba) * 2
+        const by = ship.y + ship.r * Math.sin(ba) * 2
+        createBullet(state, bx, by, ba, state.time)
         moveAngle(ship, -kick, ship.angle)
         ship.bullet = state.time + interval
       }

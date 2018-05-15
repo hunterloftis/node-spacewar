@@ -1,12 +1,19 @@
 function bullets(state, action) {
   if (!state.bullets) state.bullets = []
+  if (action.name === 'tick') {
+    state.bullets = state.bullets.filter(b => state.time <= b.lifetime)
+    state.bullets.forEach(bullet => {
+      integrate(bullet)
+    })
+  }
 }
 
 function createBullet(state, x, y, angle, time) {
   if (!state.bullets) state.bullets = []
   const b = {
     x, y, angle,
-    lifetime: time + 2000,
+    x1: x, y1: y,
+    lifetime: time + 1500,
     splashed: false,
     drag: 0,
     r: 12,
