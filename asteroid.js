@@ -18,6 +18,7 @@ class Asteroid {
     this.body = new Body(x, y, r, 0)
     this.body.moveAngle(1, angle)
     this.health = Math.ceil(5 * r / 45)
+    this.edges = 5 + Math.floor(Math.random() * 4)
   }
   update(ms, limit) {
     this.body.update(ms)

@@ -2,7 +2,7 @@ class Bullet {
   constructor(x, y, angle, time) {
     this.angle = angle
     this.body = new Body(x, y, 12, 0)
-    this.body.moveAngle(6, angle)
+    this.body.moveAngle(7, angle)
     this.lifetime = time + 2000
     this.splashed = false
   }

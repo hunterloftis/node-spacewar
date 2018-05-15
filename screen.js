@@ -128,9 +128,9 @@ class Screen {
       ctx.rotate(b.angle)
       ctx.beginPath()
       ctx.moveTo(-b.size * 2, 0)
-      ctx.lineTo(0, -b.size)
-      ctx.lineTo(b.size, 0)
-      ctx.lineTo(0, b.size)
+      ctx.lineTo(0, -b.size * 1.25)
+      ctx.lineTo(b.size * 1, 0)
+      ctx.lineTo(0, b.size * 1.25)
       ctx.closePath()
       ctx.fill()
       ctx.restore()
@@ -160,6 +160,7 @@ class Screen {
     ctx.beginPath()
     ctx.fillStyle = '#D90368'
     asteroids.forEach(a => {
+      // TODO: draw polygon of a.edges edges
       ctx.moveTo(a.body.x, a.body.y)
       ctx.arc(a.body.x, a.body.y, a.body.r, 0, Math.PI * 2)
     })
