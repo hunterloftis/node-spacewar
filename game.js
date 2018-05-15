@@ -31,6 +31,7 @@ class Game {
   transform(prevState, action) {
     const state = cloneDeep(prevState)
     state.limit = this.limit
+    state.time = action.time
     ships(state, action)
     smokes(state, action) // TODO: filter this out from state()
     asteroids(state, action)

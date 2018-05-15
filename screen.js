@@ -82,7 +82,7 @@ class Screen {
         ctx.closePath()
         ctx.fill()
         ctx.stroke()
-        if (ship.thrusting && this.frame % 4 === 0) {
+        if (ship.input.forward && this.frame % 4 === 0) {
           ctx.beginPath()
           ctx.fillStyle = '#ffffff'
           ctx.arc(-ship.r, len * 0.5, len * 0.75, 0, Math.PI * 2)
@@ -129,10 +129,10 @@ class Screen {
       ctx.translate(b.x, b.y)
       ctx.rotate(b.angle)
       ctx.beginPath()
-      ctx.moveTo(-b.size * 2, 0)
-      ctx.lineTo(0, -b.size * 1.25)
-      ctx.lineTo(b.size * 1, 0)
-      ctx.lineTo(0, b.size * 1.25)
+      ctx.moveTo(-b.r * 2, 0)
+      ctx.lineTo(0, -b.r * 1.25)
+      ctx.lineTo(b.r * 1, 0)
+      ctx.lineTo(0, b.r * 1.25)
       ctx.closePath()
       ctx.fill()
       ctx.restore()
@@ -144,11 +144,11 @@ class Screen {
     bullets.forEach(b => {
       if (!b.splashed) return
       ctx.moveTo(b.x, b.y)
-      ctx.arc(b.x, b.y, b.size * 1, 0, Math.PI * 2)
+      ctx.arc(b.x, b.y, b.r * 1, 0, Math.PI * 2)
       for (let i = 0; i < 10; i++) {
         const a = Math.random() * Math.PI * 2
-        const x = b.size * 2 * Math.cos(a)
-        const y = b.size * 2 * Math.sin(a)
+        const x = b.r * 2 * Math.cos(a)
+        const y = b.r * 2 * Math.sin(a)
         ctx.moveTo(b.x, b.y)
         ctx.lineTo(b.x + x, b.y + y)
       }

@@ -18,7 +18,7 @@ class Stars {
       points.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        z: Math.max(1, Math.random() * 125 - 25),
+        z: Math.max(1, Math.random() * 120 - 20),
         c: color
       })
     }

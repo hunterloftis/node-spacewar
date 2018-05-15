@@ -1,5 +1,8 @@
 const agility = 0.003
 const speed = 0.05
+const spread = 0.1
+const interval = 70
+const kick = 0.1
 
 function ships(state, action) {
   if (!state.ships) state.ships = []
@@ -13,6 +16,7 @@ function ships(state, action) {
       r: 14,
       angle: -Math.PI * 0.5,
       health: 100,
+      bullet: 0,
       callsign: action.callsign,
       playerId: action.playerId,
       input: { left: false, right: false, forward: false, shoot: false },
@@ -29,6 +33,14 @@ function ships(state, action) {
       if (ship.input.left) ship.angle -= action.ms * agility
       if (ship.input.right) ship.angle += action.ms * agility
       if (ship.input.forward) moveAngle(ship, speed, ship.angle)
+      if (ship.input.shoot && state.time >= ship.bullet) {
+        const ba = ship.angle + (Math.random() - 0.5) * spread * Math.PI
+        const bx = ship.x + ship.r * Math.cos(ba)
+        const by = ship.y + ship.r * Math.sin(ba)
+        createBullet(state, bx, by, ship.angle, state.time)
+        moveAngle(ship, -kick, ship.angle)
+        ship.bullet = state.time + interval
+      }
     })
   }
 }
