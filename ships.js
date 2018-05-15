@@ -17,6 +17,7 @@ function ships(state, action) {
       health: 100,
       bullet: 0,
       interval: 70,
+      smoke: 0,
       hurting: false,
       death: 0,
       callsign: action.callsign,
@@ -47,6 +48,17 @@ function ships(state, action) {
           ship.bullet = state.time + ship.interval
           ship.interval *= 1.1
         }
+      }
+      const smoking = ship.health < 100 && ship.health > 0
+      const onFire = ship.death > 0 && ship.death > state.time - 2000
+      if ((smoking || onFire) && state.time > ship.smoke) {
+        const h = ship.health / 100
+        const d = ship.death ? (state.time - ship.death) / 2000 : 0
+        const sa = ship.angle + (Math.random() - 0.5) * Math.PI * 0.5 + Math.PI
+        const sx = ship.x + ship.r * Math.cos(sa) * 1.25
+        const sy = ship.y + ship.r * Math.sin(sa) * 1.25
+        createSmoke(state, sx, sy, ship.r * 1.25)
+        ship.smoke = state.time + 50 + 100 * h + 1000 * d
       }
       contain(ship, state.limit)
     })

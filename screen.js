@@ -50,8 +50,8 @@ class Screen {
     ctx.fillStyle = '#643A71'
     ctx.beginPath()
     smokes.forEach(s => {
-      ctx.moveTo(s.body.x, s.body.y)
-      ctx.arc(s.body.x, s.body.y, s.body.r, 0, Math.PI * 2)
+      ctx.moveTo(s.x, s.y)
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
     })
     ctx.fill()
     ctx.restore()
