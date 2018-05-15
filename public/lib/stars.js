@@ -1,4 +1,4 @@
-class Stars {
+export default class Stars {
   constructor(density) {
     this.points = this.randomized(density)
     window.addEventListener('resize', () => { this.points = this.randomized(density) })

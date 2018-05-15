@@ -1,9 +1,13 @@
+import { integrate, contain, moveAngle } from './bodies.js'
+import { createBullet } from './bullets.js'
+import { createSmoke } from './smokes.js'
+
 const agility = 0.003
 const speed = 0.05
 const spread = 0.1
 const kick = 0.1
 
-function ships(state, action) {
+export function ships(state, action) {
   if (!state.ships) state.ships = []
   if (action.name === 'join') {
     state.ships.push({
@@ -65,35 +69,11 @@ function ships(state, action) {
   }
 }
 
-function damageShip(ship, n, time) {
+export function damageShip(ship, n, time) {
   ship.hurting = true
   ship.health -= n
   if (ship.health <= 0) {
     ship.drag = 0.005
     ship.death = time
   }
-}
-
-function integrate(body) {
-  const vx = body.x - body.x1
-  const vy = body.y - body.y1
-  const speed = Math.sqrt(vx * vx + vy * vy)
-  const drag = Math.min(1, speed * speed * body.drag)
-  body.x1 = body.x
-  body.y1 = body.y
-  body.x += vx * (1 - drag)
-  body.y += vy * (1 - drag)
-}
-
-function moveAngle(body, dist, angle) {
-  body.x += dist * Math.cos(angle)
-  body.y += dist * Math.sin(angle)
-}
-
-function contain(body, limit) {
-  const l = limit - body.r
-  if (body.x < -l) body.x = -l
-  else if (body.x > l) body.x = l
-  if (body.y < -l) body.y = -l
-  else if (body.y > l) body.y = l
 }

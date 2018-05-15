@@ -1,4 +1,4 @@
-class Screen {
+export default class Screen {
   constructor(id) {
     this.el = document.getElementById(id)
     this.ctx = this.el.getContext('2d')

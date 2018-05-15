@@ -1,4 +1,4 @@
-function Tick(tick, update, render) {
+export default function Tick(tick, update, render) {
   let stopped = false
   let time = performance.now()
   requestAnimationFrame(frame)

@@ -1,4 +1,10 @@
-class Game {
+import { ships } from './ships.js'
+import { smokes } from './smokes.js'
+import { asteroids } from './asteroids.js'
+import { bullets } from './bullets.js'
+import { collisions } from './collisions.js'
+
+export class Game {
   constructor(limit) {
     this.limit = limit
     this.started = 0
@@ -56,15 +62,14 @@ class Game {
   }
 }
 
-class Event {
+export class Event {
   constructor(action = {}, state = {}) {
     this.action = action
     this.state = state
-    // this.state.time = action.time
   }
 }
 
-class Action {
+export class Action {
   constructor(name, source, time) {
     this.name = name
     this.source = source

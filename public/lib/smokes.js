@@ -1,4 +1,6 @@
-function smokes(state, action) {
+import { integrate, moveAngle } from './bodies.js'
+
+export function smokes(state, action) {
   if (!state.smokes) state.smokes = []
   if (action.name === 'tick') {
     state.smokes = state.smokes.filter(s => s.r > 3)
@@ -9,11 +11,13 @@ function smokes(state, action) {
   }
 }
 
-function createSmoke(state, x, y, r) {
+export function createSmoke(state, x, y, r) {
   if (!state.smokes) state.smokes = []
-  state.smokes.push({
+  const smoke = {
     x, y, r,
     x1: x, y1: y,
     drag: 0.05
-  })
+  }
+  moveAngle(smoke, Math.random(), Math.random() * Math.PI * 2)
+  state.smokes.push(smoke)
 }

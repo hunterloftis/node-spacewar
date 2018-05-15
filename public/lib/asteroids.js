@@ -1,4 +1,6 @@
-function asteroids(state, action) {
+import { integrate, moveAngle } from './bodies.js'
+
+export function asteroids(state, action) {
   if (!state.asteroids) state.asteroids = []
   state.lasteroid = state.lasteroid || 0
   if (action.name === 'tick') {
@@ -39,6 +41,6 @@ function asteroids(state, action) {
   }
 }
 
-function damageAsteroid(asteroid, n) {
+export function damageAsteroid(asteroid, n) {
   asteroid.health -= n
 }

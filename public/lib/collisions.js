@@ -1,4 +1,8 @@
-function collisions(state, action) {
+import { damageAsteroid } from './asteroids.js'
+import { destroyBullet } from './bullets.js'
+import { damageShip } from './ships.js'
+
+export function collisions(state, action) {
   if (action.name === 'tick') {
     state.ships.forEach(s => {
       s.hurting = false
@@ -26,7 +30,7 @@ function collisions(state, action) {
   }
 }
 
-function hits(a, b) {
+export function hits(a, b) {
   const dx = a.x - b.x
   const dy = a.y - b.y
   const d = Math.sqrt(dx * dx + dy * dy)

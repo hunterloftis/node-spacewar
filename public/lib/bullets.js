@@ -1,4 +1,6 @@
-function bullets(state, action) {
+import { integrate, moveAngle } from './bodies.js'
+
+export function bullets(state, action) {
   if (!state.bullets) state.bullets = []
   if (action.name === 'tick') {
     state.bullets = state.bullets.filter(b => state.time <= b.lifetime)
@@ -8,7 +10,7 @@ function bullets(state, action) {
   }
 }
 
-function createBullet(state, x, y, angle, time) {
+export function createBullet(state, x, y, angle, time) {
   if (!state.bullets) state.bullets = []
   const b = {
     x, y, angle,
@@ -21,6 +23,6 @@ function createBullet(state, x, y, angle, time) {
   state.bullets.push(b)
 }
 
-function destroyBullet(b) {
+export function destroyBullet(b) {
   b.lifetime = 0
 }

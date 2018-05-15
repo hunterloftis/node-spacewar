@@ -1,0 +1,41 @@
+<html>
+<canvas id='screen' width='640' height='480' style='cursor: none;' />
+<script type="module">
+
+  import Screen from './lib/screen.js'
+  import Stars from './lib/stars.js'
+  import Keyboard from './lib/keyboard.js'
+  import Camera from './lib/camera.js'
+  import { Game, Action } from './lib/game.js'
+  import Tick from './lib/tick.js'
+
+  const screen = new Screen('screen')
+  const stars = new Stars(0.0001)
+  const kb = new Keyboard()
+  const cam = new Camera()
+  const game = new Game(1000)
+  const stop = Tick(16, update, render)
+
+  game.start()
+  game.commit(new Action('join').set({
+    playerId: 1,
+    callsign: 'Amanda'
+  }))
+
+  kb.onChange((input, value) => {
+    game.commit(new Action('input').set({ playerId: 1, input, value }))
+  })
+
+  function update(ms, time) {
+    const state = game.commit(new Action('tick').set({ ms }))
+    cam.update(ms, state, screen.width, screen.height)
+  }
+
+  function render(ms, time) {
+    const frame = game.frame()
+    screen.draw(ms, time, frame, cam, stars.points)
+  }
+
+</script>
+
+</html>
