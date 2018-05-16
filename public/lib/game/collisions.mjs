@@ -15,7 +15,7 @@ export function collisions(state, action) {
       state.bullets.forEach(b => {
         if (hits(b, s)) {
           damageShip(s, 10, state.time)
-          destroyBullet(b)
+          destroyBullet(state, b)
         }
       })
     })
@@ -23,7 +23,7 @@ export function collisions(state, action) {
       state.asteroids.forEach(a => {
         if (hits(b, a)) {
           damageAsteroid(a, 10, state.time)
-          destroyBullet(b)
+          destroyBullet(state, b)
         }
       })
     })

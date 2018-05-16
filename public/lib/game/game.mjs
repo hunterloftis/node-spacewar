@@ -1,5 +1,5 @@
 import { ships } from './ships.mjs'
-import { smokes } from './smokes.mjs'
+import { particles } from './particles.mjs'
 import { asteroids } from './asteroids.mjs'
 import { bullets } from './bullets.mjs'
 import { collisions } from './collisions.mjs'
@@ -42,7 +42,7 @@ export class Game {
     state.limit = this.limit
     state.time = action.time
     ships(state, action)
-    smokes(state, action) // TODO: filter this out from state()
+    particles(state, action) // TODO: filter this out from state()
     asteroids(state, action)
     bullets(state, action)
     collisions(state, action)

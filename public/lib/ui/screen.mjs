@@ -27,7 +27,7 @@ export default class Screen {
     this.drawCam(this.ctx, cam)
     this.drawAsteroids(this.ctx, state.asteroids)
     this.drawBullets(this.ctx, state.bullets)
-    this.drawSmokes(this.ctx, state.smokes)
+    this.drawParticles(this.ctx, state.particles)
     this.drawShips(this.ctx, time, state.ships)
     this.ctx.restore()
   }
@@ -47,15 +47,25 @@ export default class Screen {
     })
     ctx.restore()
   }
-  drawSmokes(ctx, smokes) {
+  drawParticles(ctx, particles) {
+    const smokes = particles.filter(p => p.type === 'smoke')
+    const sparks = particles.filter(p => p.type === 'spark')
     ctx.save()
-    ctx.fillStyle = '#643A71'
     ctx.beginPath()
+    ctx.fillStyle = '#643A71'
     smokes.forEach(s => {
       ctx.moveTo(s.x, s.y)
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
     })
     ctx.fill()
+    ctx.beginPath()
+    ctx.strokeStyle = '#ffff00'
+    ctx.lineWidth = 6
+    sparks.forEach(s => {
+      ctx.moveTo(s.x, s.y)
+      ctx.lineTo(s.x + (s.x1 - s.x) * 5, s.y + (s.y1 - s.y) * 5)
+    })
+    ctx.stroke()
     ctx.restore()
   }
   drawCam(ctx, cam) {

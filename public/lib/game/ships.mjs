@@ -1,6 +1,6 @@
 import { integrate, contain, moveAngle } from './bodies.mjs'
 import { createBullet } from './bullets.mjs'
-import { createSmoke } from './smokes.mjs'
+import { createSmoke } from './particles.mjs'
 
 const agility = 0.003
 const speed = 0.05

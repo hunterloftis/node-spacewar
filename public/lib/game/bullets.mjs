@@ -1,4 +1,5 @@
 import { integrate, moveAngle } from './bodies.mjs'
+import { createSpark } from './particles.mjs'
 
 export function bullets(state, action) {
   if (!state.bullets) state.bullets = []
@@ -23,6 +24,9 @@ export function createBullet(state, x, y, angle, time) {
   state.bullets.push(b)
 }
 
-export function destroyBullet(b) {
+export function destroyBullet(state, b) {
   b.lifetime = 0
+  for (let i = 0; i < 7; i++) {
+    createSpark(state, b.x, b.y, b.r * 0.33, b.angle + Math.PI)
+  }
 }
