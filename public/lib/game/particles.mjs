@@ -31,3 +31,8 @@ export function createSpark(state, x, y, r, angle) {
   const p = createParticle(state, x, y, r, 'spark')
   moveAngle(p, 2 + Math.random() * 8, angle + (Math.random() - 0.5) * Math.PI)
 }
+
+export function createRock(state, x, y, r) {
+  const p = createParticle(state, x, y, r, 'rock')
+  moveAngle(p, 1 + Math.random() * 3, Math.random() * Math.PI * 2)
+}

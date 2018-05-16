@@ -50,7 +50,15 @@ export default class Screen {
   drawParticles(ctx, particles) {
     const smokes = particles.filter(p => p.type === 'smoke')
     const sparks = particles.filter(p => p.type === 'spark')
+    const rocks = particles.filter(p => p.type === 'rock')
     ctx.save()
+    ctx.beginPath()
+    ctx.fillStyle = '#D90368'
+    rocks.forEach(r => {
+      ctx.moveTo(r.x, r.y)
+      ctx.arc(r.x, r.y, r.r, 0, Math.PI * 2)
+    })
+    ctx.fill()
     ctx.beginPath()
     ctx.fillStyle = '#643A71'
     smokes.forEach(s => {

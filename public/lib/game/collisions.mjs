@@ -22,7 +22,7 @@ export function collisions(state, action) {
     state.bullets.forEach(b => {
       state.asteroids.forEach(a => {
         if (hits(b, a)) {
-          damageAsteroid(a, 10, state.time)
+          damageAsteroid(state, a, 10)
           destroyBullet(state, b)
         }
       })

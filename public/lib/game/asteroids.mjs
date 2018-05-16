@@ -1,4 +1,5 @@
 import { integrate, moveAngle } from './bodies.mjs'
+import { createRock } from './particles.mjs'
 
 export function asteroids(state, action) {
   if (!state.asteroids) state.asteroids = []
@@ -41,6 +42,14 @@ export function asteroids(state, action) {
   }
 }
 
-export function damageAsteroid(asteroid, n) {
+export function damageAsteroid(state, asteroid, n) {
   asteroid.health -= n
+  if (asteroid.health <= 0) {
+    for (let i = 0; i < asteroid.r / 2; i++) {
+      const x = asteroid.x + (Math.random() - 0.5) * asteroid.r
+      const y = asteroid.y + (Math.random() - 0.5) * asteroid.r
+      const r = 7
+      createRock(state, x, y, r)
+    }
+  }
 }
