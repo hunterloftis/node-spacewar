@@ -1,6 +1,8 @@
 import { integrate, moveAngle } from './bodies.mjs'
 import { createSpark } from './particles.mjs'
 
+const LIFETIME = 2000
+
 export function bullets(state, action) {
   if (!state.bullets) state.bullets = []
   if (action.name === 'tick') {
@@ -16,7 +18,7 @@ export function createBullet(state, x, y, angle, time) {
   const b = {
     x, y, angle,
     x1: x, y1: y,
-    lifetime: time + 1500,
+    lifetime: time + LIFETIME,
     drag: 0,
     r: 12,
   }
