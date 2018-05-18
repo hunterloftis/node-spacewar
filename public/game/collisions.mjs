@@ -2,14 +2,14 @@ import { damageAsteroid } from './asteroids.mjs'
 import { destroyBullet } from './bullets.mjs'
 import { damageShip } from './ships.mjs'
 
-export function collisions(state, action) {
+export function collisions(state, action, host) {
   if (action.name === 'tick') {
     state.ships.forEach(s => {
       s.hurting = false
       if (s.health <= 0) return
       state.asteroids.forEach(a => {
         if (hits(a, s)) {
-          damageShip(s, 1, state.time)
+          damageShip(s, 1, state.time, host)
         }
       })
       state.bullets.forEach(b => {

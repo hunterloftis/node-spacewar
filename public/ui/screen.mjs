@@ -21,7 +21,6 @@ export default class Screen {
     this.ctx.save()
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
     this.ctx.fillRect(0, 0, this.el.width, this.el.height)
-    // this.ctx.clearRect(0, 0, this.el.width, this.el.height)
     this.drawStars(this.ctx, stars, cam)
     this.ctx.translate(this.el.width * 0.5, this.el.height * 0.5)
     this.drawCam(this.ctx, cam)
@@ -137,7 +136,7 @@ export default class Screen {
       ctx.font = '14px sans-serif'
       ctx.textAlign = 'center'
       ctx.textBaseline = 'top'
-      const text = ship.health > 0 ? ship.callsign : 'Press [space] to try again'
+      const text = ship.health > 0 ? ship.callsign : 'Press [Cmd + R] to try again'
       ctx.fillText(text, 0, ship.r * 2.5);
       ctx.restore()
     })

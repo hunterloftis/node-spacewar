@@ -6,7 +6,6 @@ export default class Keyboard {
       'ArrowUp': 'forward',
       ' ': 'shoot'
     }
-    // this.state = { left: false, right: false, forward: false, shoot: false }
     this.callback = () => { }
     document.addEventListener('keydown', e => { this.setKey(e, true) })
     document.addEventListener('keyup', e => { this.setKey(e, false) })

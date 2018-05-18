@@ -4,8 +4,8 @@ export default class Camera {
     this.x = 0
     this.y = 0
   }
-  update(ms, state, width, height) {
-    const ship = state.ships[0]
+  update(ms, state, id, width, height) {
+    const ship = state.ships.find(s => s.id === id)
     if (!ship) return
     const mx = state.limit - width * 0.5
     const my = state.limit - height * 0.5

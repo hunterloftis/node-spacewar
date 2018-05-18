@@ -1,0 +1,83 @@
+<html>
+<canvas id='screen' width='640' height='480' />
+<script type="module">
+
+  import Screen from './ui/screen.mjs'
+  import Stars from './ui/stars.mjs'
+  import Keyboard from './ui/keyboard.mjs'
+  import Camera from './ui/camera.mjs'
+  import { Game } from './game/game.mjs'
+  import Tick from './game/tick.mjs'
+
+  const proto = { 'http:': 'ws:', 'https:': 'wss:' }[location.protocol]
+  const ws = new WebSocket(`${proto}//${location.host}/game`)
+
+  const screen = new Screen('screen')
+  const stars = new Stars(0.0001)
+  const kb = new Keyboard()
+  const cam = new Camera()
+  const game = new Game(false, 1000)
+  const stop = Tick(16, update, render)
+
+  window.game = game
+
+  ws.addEventListener('message', onMessage)
+  kb.onChange(onKey)
+  setInterval(ping, 1000)
+
+  function onMessage(obj) {
+    const msg = JSON.parse(obj.data)
+    if (msg.type === 'welcome') {
+      game.setId(msg.id)
+      // const ja = game.joinAction('Amanda')
+      const ja = game.joinAction(msg.id)
+      game.commit(ja, performance.now())
+      send(ja)
+    }
+    else if (msg.type === 'action') {
+      game.commit(msg.action, performance.now - msg.delay)
+    }
+    else if (msg.type === 'snapshot') {
+      game.update(msg.snapshot, msg.actionId)
+      game.blend(0)
+      confirm(msg.snapshot.id)
+    }
+  }
+
+  function ping() {
+    const pa = game.pingAction()
+    game.commit(pa, performance.now())
+    send(pa)
+  }
+
+  function onKey(input, value) {
+    const ia = game.inputAction(input, value)
+    game.commit(ia, performance.now())
+    send(ia)
+  }
+
+  function update(ms, time) {
+    game.commit(game.tickAction(ms), performance.now())
+    const state = game.reduce().state
+    cam.update(ms, state, game.id, screen.width, screen.height)
+    game.blend(0.01)
+  }
+
+  function render(ms, time) {
+    const state = game.reduce().state
+    screen.draw(ms, time, state, cam, stars.points)
+  }
+
+  function send(action) {
+    const msg = JSON.stringify({ type: 'action', action })
+    ws.send(msg)
+  }
+
+  function confirm(id) {
+    const msg = JSON.stringify({ type: 'ok', snapshot: id })
+    ws.send(msg)
+  }
+
+</script>
+
+</html>

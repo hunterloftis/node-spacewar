@@ -1,7 +1,10 @@
+const raf = typeof requestAnimationFrame === 'function'
+  ? requestAnimationFrame : timeout
+
 export default function Tick(tick, update, render) {
   let stopped = false
   let time = performance.now()
-  requestAnimationFrame(frame)
+  raf(frame)
   return stop
 
   function frame() {
@@ -14,10 +17,14 @@ export default function Tick(tick, update, render) {
       update(tick, time)
     }
     render(now - prev, now)
-    requestAnimationFrame(frame)
+    raf(frame)
   }
 
   function stop() {
     stopped = true
   }
+}
+
+function timeout(fn) {
+  setTimeout(fn, 16)
 }
