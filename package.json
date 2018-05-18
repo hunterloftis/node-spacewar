@@ -10,8 +10,6 @@
     "start": "node --experimental-modules index.mjs"
   },
   "dependencies": {
-    "performance-now": "^2.1.0",
-    "raf": "^3.4.0",
     "ws": "^5.1.1"
   }
 }
